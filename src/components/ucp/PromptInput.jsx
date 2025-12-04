@@ -1,5 +1,5 @@
 import React from 'react';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, Zap, Brain, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
@@ -34,24 +34,54 @@ export default function PromptInput({ value, onChange, onSubmit, isLoading, plac
         />
       </div>
 
+      {/* Dynamic Routing Indicator */}
+      <div className={cn(
+        "flex items-center gap-3 p-3 rounded-xl border-2 transition-all",
+        charCount < threshold 
+          ? "bg-amber-50 border-amber-200" 
+          : "bg-violet-50 border-violet-200"
+      )}>
+        <div className={cn(
+          "w-10 h-10 rounded-lg flex items-center justify-center",
+          charCount < threshold ? "bg-amber-100" : "bg-violet-100"
+        )}>
+          {charCount < threshold ? (
+            <Zap className="w-5 h-5 text-amber-600" />
+          ) : (
+            <Brain className="w-5 h-5 text-violet-600" />
+          )}
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <span className={cn(
+              "font-semibold",
+              charCount < threshold ? "text-amber-700" : "text-violet-700"
+            )}>
+              {charCount < threshold ? "Fast Model" : "Smart Model"}
+            </span>
+            <span className={cn(
+              "text-sm",
+              charCount < threshold ? "text-amber-600" : "text-violet-600"
+            )}>
+              ({charCount} characters)
+            </span>
+          </div>
+          <p className={cn(
+            "text-xs",
+            charCount < threshold ? "text-amber-600" : "text-violet-600"
+          )}>
+            {charCount < threshold 
+              ? `Prompts under ${threshold} chars route to Fast Model`
+              : `Prompts ≥${threshold} chars route to Smart Model`
+            }
+          </p>
+        </div>
+      </div>
+
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              "text-sm font-medium transition-colors",
-              charCount >= threshold ? "text-violet-600" : "text-amber-600"
-            )}
-          >
-            {charCount} characters
-          </span>
-          <span className="text-slate-300">•</span>
-          <span className="text-sm text-slate-500">
-            {charCount < threshold ? (
-              <>Routes to <span className="font-medium text-amber-600">Fast Model</span></>
-            ) : (
-              <>Routes to <span className="font-medium text-violet-600">Smart Model</span></>
-            )}
-          </span>
+        <div className="flex items-center gap-1.5 text-xs text-slate-500">
+          <Shield className="w-3 h-3 text-violet-500" />
+          <span>Routing logic derived from UCP Packet (Patent Pending)</span>
         </div>
 
         <Button
@@ -74,7 +104,7 @@ export default function PromptInput({ value, onChange, onSubmit, isLoading, plac
       </div>
 
       <p className="text-xs text-slate-400">
-        Press ⌘+Enter to submit • Prompts under {threshold} chars use the fast model
+        Press ⌘+Enter to submit
       </p>
     </div>
   );
