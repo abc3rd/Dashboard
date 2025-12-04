@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
-import { Sparkles, Settings, MessageSquare, Book, Shield } from 'lucide-react';
+import { Sparkles, Settings, MessageSquare, Book, Shield, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
 import AboutUcpDrawer from '@/components/ucp/AboutUcpDrawer';
@@ -9,6 +9,7 @@ import AboutUcpDrawer from '@/components/ucp/AboutUcpDrawer';
 export default function Layout({ children, currentPageName }) {
   const navItems = [
     { name: 'Home', icon: MessageSquare, label: 'Ask' },
+    { name: 'PerformanceMonitoring', icon: Activity, label: 'Monitoring' },
     { name: 'RouterPacket', icon: Settings, label: 'Router Packet' },
     { name: 'UcpApiDocs', icon: Book, label: 'API Docs' }
   ];
