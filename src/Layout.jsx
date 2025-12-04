@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
-import { Sparkles, Settings, MessageSquare } from 'lucide-react';
+import { Sparkles, Settings, MessageSquare, Book } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
 
 export default function Layout({ children, currentPageName }) {
   const navItems = [
     { name: 'Home', icon: MessageSquare, label: 'Ask' },
-    { name: 'RouterPacket', icon: Settings, label: 'Router Packet' }
+    { name: 'RouterPacket', icon: Settings, label: 'Router Packet' },
+    { name: 'UcpApiDocs', icon: Book, label: 'API Docs' }
   ];
 
   return (
