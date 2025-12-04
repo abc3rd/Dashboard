@@ -1,30 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Settings, Save, RotateCcw, Check, AlertCircle, Eye, Pencil } from 'lucide-react';
+import { Settings, Save, RotateCcw, AlertCircle, Eye, Pencil, Server, Code } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import JsonViewer from '@/components/ucp/JsonViewer';
 import RuleEditor from '@/components/ucp/RuleEditor';
-import { DEFAULT_ROUTER_PACKET } from '@/components/ucp/UcpRouter';
+import UcpStatusBadge from '@/components/ucp/UcpStatusBadge';
+import { UcpRouterService, DEFAULT_ROUTER_PACKET } from '@/components/ucp/UcpService';
 
 export default function RouterPacketPage() {
   const [editedPacket, setEditedPacket] = useState(null);
   const [activeTab, setActiveTab] = useState('view');
   const queryClient = useQueryClient();
 
-  // Fetch current packet
-  const { data: routerPackets, isLoading } = useQuery({
+  // Fetch current packet from backend service
+  const { data: packetResponse, isLoading } = useQuery({
     queryKey: ['routerPacket'],
-    queryFn: () => base44.entities.RouterPacket.list('-created_date', 1),
+    queryFn: () => UcpRouterService.getRouterPacket(),
   });
 
-  const currentPacket = routerPackets?.[0] || null;
+  const currentPacket = packetResponse?.packet || null;
   const displayPacket = editedPacket || currentPacket || DEFAULT_ROUTER_PACKET;
 
   // Initialize edited packet when data loads
@@ -36,17 +35,14 @@ export default function RouterPacketPage() {
     }
   }, [currentPacket]);
 
-  // Save mutation
+  // Save mutation - uses backend service
   const saveMutation = useMutation({
     mutationFn: async (packet) => {
-      // Remove id if creating new
-      const { id, created_date, updated_date, created_by, ...packetData } = packet;
-      
-      if (currentPacket?.id) {
-        return base44.entities.RouterPacket.update(currentPacket.id, packetData);
-      } else {
-        return base44.entities.RouterPacket.create(packetData);
+      const response = await UcpRouterService.updateRouterPacket(packet);
+      if (!response.success) {
+        throw new Error(response.error || 'Failed to save packet');
       }
+      return response;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['routerPacket'] });
@@ -114,16 +110,38 @@ export default function RouterPacketPage() {
       <div className="max-w-4xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center">
-              <Settings className="w-5 h-5 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center">
+                <Settings className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-slate-900">Router Packet</h1>
+                <p className="text-sm text-slate-500">Configure UCP routing rules and model selection</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900">Router Packet</h1>
-              <p className="text-sm text-slate-500">Configure UCP routing rules and model selection</p>
-            </div>
+            <UcpStatusBadge showDetails />
           </div>
         </div>
+
+        {/* Backend Service Info */}
+        <Card className="border-0 shadow-md bg-gradient-to-r from-slate-50 to-slate-100 mb-6">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <Server className="w-5 h-5 text-slate-600" />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-slate-700">Backend Service</p>
+                <p className="text-xs text-slate-500">
+                  Changes are saved to the backend and will affect all API consumers
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-slate-500">
+                <Code className="w-4 h-4" />
+                <code className="bg-white px-2 py-1 rounded border">POST /api/functions/ucpRouter</code>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
