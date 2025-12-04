@@ -1,32 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, History, ArrowRight } from 'lucide-react';
+import { Sparkles, History, ArrowRight, Server } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PromptInput from '@/components/ucp/PromptInput';
 import AnswerCard from '@/components/ucp/AnswerCard';
 import ModelBadge from '@/components/ucp/ModelBadge';
-import { 
-  chooseModelForPrompt, 
-  fastModelAdapter, 
-  smartModelAdapter, 
-  DEFAULT_ROUTER_PACKET 
-} from '@/components/ucp/UcpRouter';
+import UcpStatusBadge from '@/components/ucp/UcpStatusBadge';
+import { UcpRouterService } from '@/components/ucp/UcpService';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
   const [result, setResult] = useState(null);
+  const [useBackend, setUseBackend] = useState(true);
   const queryClient = useQueryClient();
-
-  // Fetch router packet
-  const { data: routerPackets } = useQuery({
-    queryKey: ['routerPacket'],
-    queryFn: () => base44.entities.RouterPacket.list('-created_date', 1),
-  });
-
-  // Get current packet or use default
-  const currentPacket = routerPackets?.[0] || DEFAULT_ROUTER_PACKET;
 
   // Fetch recent queries
   const { data: recentQueries } = useQuery({
@@ -34,43 +22,17 @@ export default function Home() {
     queryFn: () => base44.entities.QueryLog.list('-created_date', 5),
   });
 
-  // Ask mutation
+  // Ask mutation - uses backend service
   const askMutation = useMutation({
     mutationFn: async (promptText) => {
-      const startTime = Date.now();
+      // Call the UCP Router backend service
+      const response = await UcpRouterService.ask(promptText);
       
-      // Choose model based on UCP packet
-      const chosenModel = chooseModelForPrompt(currentPacket, promptText);
-      
-      // Call the appropriate adapter
-      let response;
-      if (chosenModel === 'fast_model') {
-        response = await fastModelAdapter(promptText);
-      } else {
-        response = await smartModelAdapter(promptText);
+      if (!response.success) {
+        throw new Error(response.error || 'Failed to get response');
       }
       
-      const totalLatency = Date.now() - startTime;
-      
-      const resultData = {
-        prompt: promptText,
-        final_answer: response.outputs.answer,
-        chosen_model: response.meta.model_id,
-        confidence: response.outputs.confidence,
-        latency_ms: totalLatency,
-        router_packet_snapshot: currentPacket
-      };
-
-      // Save to query log
-      await base44.entities.QueryLog.create({
-        prompt: promptText,
-        answer: response.outputs.answer,
-        chosen_model: response.meta.model_id,
-        confidence: response.outputs.confidence,
-        latency_ms: totalLatency
-      });
-
-      return resultData;
+      return response;
     },
     onSuccess: (data) => {
       setResult(data);
@@ -100,6 +62,9 @@ export default function Home() {
             Ask any question and watch the Universal Command Protocol intelligently 
             route your request to the optimal AI model.
           </p>
+          <div className="mt-4 flex items-center justify-center gap-3">
+            <UcpStatusBadge showDetails />
+          </div>
         </div>
 
         {/* Main Input Card */}
