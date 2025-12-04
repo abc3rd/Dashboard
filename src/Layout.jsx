@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
-import { Sparkles, Settings, MessageSquare, Book } from 'lucide-react';
+import { Sparkles, Settings, MessageSquare, Book, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
+import AboutUcpDrawer from '@/components/ucp/AboutUcpDrawer';
 
 export default function Layout({ children, currentPageName }) {
   const navItems = [
@@ -16,7 +17,7 @@ export default function Layout({ children, currentPageName }) {
     <div className="min-h-screen bg-slate-50">
       {/* Top Navigation */}
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-5xl mx-auto px-4">
           <div className="flex items-center justify-between h-14">
             {/* Logo */}
             <Link 
@@ -27,6 +28,10 @@ export default function Layout({ children, currentPageName }) {
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
               <span className="font-semibold text-lg hidden sm:block">UCP Router</span>
+              <span className="hidden md:flex items-center gap-1 text-xs text-violet-600 bg-violet-50 px-2 py-0.5 rounded-full">
+                <Shield className="w-3 h-3" />
+                Patent Pending
+              </span>
             </Link>
 
             {/* Navigation Links */}
@@ -46,6 +51,7 @@ export default function Layout({ children, currentPageName }) {
                   <span className="hidden sm:block">{item.label}</span>
                 </Link>
               ))}
+              <AboutUcpDrawer />
             </div>
           </div>
         </div>
@@ -58,10 +64,11 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Footer */}
       <footer className="py-8 mt-12 border-t border-slate-200 bg-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <p className="text-sm text-slate-500">
-            Universal Command Protocol • AI Router v1.0
-          </p>
+        <div className="max-w-5xl mx-auto px-4 text-center">
+          <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
+            <Shield className="w-4 h-4 text-violet-500" />
+            <span>Powered by UCP — Patent Pending (Application No. 63/928,882) — Omega UI, LLC</span>
+          </div>
         </div>
       </footer>
 
