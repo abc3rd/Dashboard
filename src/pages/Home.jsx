@@ -1,26 +1,19 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, History, ArrowRight, Server } from 'lucide-react';
+import { Sparkles, Shield } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PromptInput from '@/components/ucp/PromptInput';
 import AnswerCard from '@/components/ucp/AnswerCard';
-import ModelBadge from '@/components/ucp/ModelBadge';
 import UcpStatusBadge from '@/components/ucp/UcpStatusBadge';
+import MetricsCard from '@/components/ucp/MetricsCard';
+import QueryHistoryTable from '@/components/ucp/QueryHistoryTable';
 import { UcpRouterService } from '@/components/ucp/UcpService';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
   const [result, setResult] = useState(null);
-  const [useBackend, setUseBackend] = useState(true);
   const queryClient = useQueryClient();
-
-  // Fetch recent queries
-  const { data: recentQueries } = useQuery({
-    queryKey: ['recentQueries'],
-    queryFn: () => base44.entities.QueryLog.list('-created_date', 5),
-  });
 
   // Ask mutation - uses backend service
   const askMutation = useMutation({
@@ -38,6 +31,7 @@ export default function Home() {
       setResult(data);
       setPrompt('');
       queryClient.invalidateQueries({ queryKey: ['recentQueries'] });
+      queryClient.invalidateQueries({ queryKey: ['allQueryLogs'] });
     }
   });
 
@@ -58,9 +52,14 @@ export default function Home() {
           <h1 className="text-4xl font-bold text-slate-900 mb-3">
             UCP AI Router
           </h1>
+          <div className="flex items-center justify-center gap-2 text-violet-600 mb-3">
+            <Shield className="w-4 h-4" />
+            <span className="text-sm font-medium">Patent Pending</span>
+          </div>
           <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-            Ask any question and watch the Universal Command Protocol intelligently 
-            route your request to the optimal AI model.
+            Ask any question and watch the Universal Command Protocol (UCP) — Patent Pending — 
+            route it to the optimal AI model using deterministic rules. 
+            <span className="font-medium text-slate-700"> Interpret once. Execute infinitely.</span>
           </p>
           <div className="mt-4 flex items-center justify-center gap-3">
             <UcpStatusBadge showDetails />
@@ -103,45 +102,13 @@ export default function Home() {
           </Card>
         )}
 
-        {/* Recent Queries */}
-        {recentQueries && recentQueries.length > 0 && (
-          <Card className="border-0 shadow-lg bg-white/60 backdrop-blur-sm">
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-2">
-                <History className="w-5 h-5 text-slate-400" />
-                <CardTitle className="text-base font-semibold text-slate-700">
-                  Recent Queries
-                </CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {recentQueries.map((query) => (
-                  <button
-                    key={query.id}
-                    onClick={() => setPrompt(query.prompt)}
-                    className="w-full text-left p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors group"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-slate-700 truncate mb-1">
-                          {query.prompt}
-                        </p>
-                        <div className="flex items-center gap-2">
-                          <ModelBadge modelId={query.chosen_model} size="small" />
-                          <span className="text-xs text-slate-400">
-                            {query.latency_ms}ms
-                          </span>
-                        </div>
-                      </div>
-                      <ArrowRight className="w-4 h-4 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 mt-1" />
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* Metrics Card */}
+        <div className="mb-8">
+          <MetricsCard />
+        </div>
+
+        {/* Query History Table */}
+        <QueryHistoryTable limit={10} />
       </div>
     </div>
   );
