@@ -411,9 +411,11 @@ export default function VisualEditAgent() {
 			}
 		};
 
+		const TRUSTED_ORIGINS = ['https://www.base44.com'];
+
 		const handleMessage = (event) => {
-			// Check origin if desired
-			//if (event.origin !== 'parent-origin') return;
+			// Validate sender origin to prevent cross-origin message injection
+			if (!TRUSTED_ORIGINS.includes(event.origin)) return;
 
 			const message = event.data;
 
