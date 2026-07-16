@@ -8,6 +8,7 @@ import AnswerCard from '@/components/ucp/AnswerCard';
 import UcpStatusBadge from '@/components/ucp/UcpStatusBadge';
 import MetricsCard from '@/components/ucp/MetricsCard';
 import QueryHistoryTable from '@/components/ucp/QueryHistoryTable';
+import PullToRefresh from '@/components/ucp/PullToRefresh';
 import { UcpRouterService } from '@/components/ucp/UcpService';
 
 export default function Home() {
@@ -102,13 +103,20 @@ export default function Home() {
           </Card>
         )}
 
-        {/* Metrics Card */}
-        <div className="mb-8">
-          <MetricsCard />
-        </div>
+        {/* Metrics + History with Pull-to-Refresh */}
+        <PullToRefresh
+          onRefresh={async () => {
+            await queryClient.invalidateQueries({ queryKey: ['allQueryLogs'] });
+            await queryClient.invalidateQueries({ queryKey: ['recentQueries'] });
+          }}
+        >
+          <div className="mb-8">
+            <MetricsCard />
+          </div>
 
-        {/* Query History Table */}
-        <QueryHistoryTable limit={10} />
+          {/* Query History Table */}
+          <QueryHistoryTable limit={10} />
+        </PullToRefresh>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { Trash2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import ResponsiveModelSelect from './ResponsiveModelSelect';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function RuleEditor({ rules, models, onChange, onAdd, onRemove }) {
@@ -54,21 +54,12 @@ export default function RuleEditor({ rules, models, onChange, onAdd, onRemove })
 
                 <div className="space-y-2">
                   <Label className="text-xs text-slate-500">Route To</Label>
-                  <Select
+                  <ResponsiveModelSelect
                     value={rule.choose_model}
                     onValueChange={(value) => handleRuleChange(index, 'choose_model', value)}
-                  >
-                    <SelectTrigger className="h-9">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {models.map((model) => (
-                        <SelectItem key={model.id} value={model.id}>
-                          {model.id}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    models={models}
+                    triggerClassName="h-9"
+                  />
                 </div>
               </div>
 

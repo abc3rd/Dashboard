@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { createPageUrl } from './utils';
-import { Sparkles, Settings, MessageSquare, Book, Shield, Activity } from 'lucide-react';
+import { Sparkles, Settings, MessageSquare, Book, Shield, Activity, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
 import AboutUcpDrawer from '@/components/ucp/AboutUcpDrawer';
@@ -16,6 +16,14 @@ const PAGE_TITLES = {
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleNavClick = (e, itemName) => {
+    if (currentPageName === itemName) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
   const navItems = [
     { name: 'Home', icon: MessageSquare, label: 'Ask' },
     { name: 'PerformanceMonitoring', icon: Activity, label: 'Monitoring' },
@@ -51,6 +59,7 @@ export default function Layout({ children, currentPageName }) {
                 <Link
                   key={item.name}
                   to={createPageUrl(item.name)}
+                  onClick={(e) => handleNavClick(e, item.name)}
                   className={cn(
                     "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all min-h-[44px]",
                     currentPageName === item.name
@@ -75,16 +84,28 @@ export default function Layout({ children, currentPageName }) {
         className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border md:hidden"
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
       >
-        <div className="flex items-center justify-between h-12 px-4">
-          <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center">
-              <Sparkles className="w-3.5 h-3.5 text-white" />
-            </div>
-            <span className="font-semibold text-sm text-foreground">UCP Router</span>
-          </Link>
-          <span className="text-sm font-medium text-muted-foreground">
-            {PAGE_TITLES[currentPageName] || ''}
-          </span>
+        <div className="flex items-center h-12 px-4 gap-3">
+          {currentPageName !== 'Home' ? (
+            <>
+              <button
+                onClick={() => navigate(-1)}
+                className="flex items-center justify-center w-9 h-9 -ml-2 rounded-lg hover:bg-muted transition-colors min-h-[44px]"
+                aria-label="Go back"
+              >
+                <ChevronLeft className="w-5 h-5 text-foreground" />
+              </button>
+              <span className="text-sm font-semibold text-foreground">
+                {PAGE_TITLES[currentPageName] || ''}
+              </span>
+            </>
+          ) : (
+            <Link to={createPageUrl('Home')} className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center">
+                <Sparkles className="w-3.5 h-3.5 text-white" />
+              </div>
+              <span className="font-semibold text-sm text-foreground">UCP Router</span>
+            </Link>
+          )}
         </div>
       </header>
 
@@ -113,6 +134,7 @@ export default function Layout({ children, currentPageName }) {
             <Link
               key={item.name}
               to={createPageUrl(item.name)}
+              onClick={(e) => handleNavClick(e, item.name)}
               className={cn(
                 "flex flex-col items-center justify-center gap-1 py-2 px-3 min-h-[56px] min-w-[44px] flex-1 transition-colors",
                 currentPageName === item.name

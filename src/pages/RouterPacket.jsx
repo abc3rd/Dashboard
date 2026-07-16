@@ -11,12 +11,15 @@ import JsonViewer from '@/components/ucp/JsonViewer';
 import RuleEditor from '@/components/ucp/RuleEditor';
 import UcpStatusBadge from '@/components/ucp/UcpStatusBadge';
 import RoutingBreakdown from '@/components/ucp/RoutingBreakdown';
+import DeleteAccountDialog from '@/components/ucp/DeleteAccountDialog';
 import { UcpRouterService, DEFAULT_ROUTER_PACKET } from '@/components/ucp/UcpService';
+import { useAuth } from '@/lib/AuthContext';
 
 export default function RouterPacketPage() {
   const [editedPacket, setEditedPacket] = useState(null);
   const [activeTab, setActiveTab] = useState('view');
   const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuth();
 
   // Fetch current packet from backend service
   const { data: packetResponse, isLoading } = useQuery({
@@ -300,6 +303,11 @@ export default function RouterPacketPage() {
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* Danger Zone - Delete Account (authenticated users only) */}
+        {isAuthenticated && (
+          <DeleteAccountDialog />
+        )}
       </div>
     </div>
   );
