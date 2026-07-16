@@ -127,9 +127,18 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </nav>
 
-      {/* Desktop Footer */}
-      <footer className="hidden md:block py-8 mt-12 border-t border-border bg-background">
-        <div className="max-w-5xl mx-auto px-4 text-center">
+      {/* Footer */}
+      <footer className="py-8 mt-12 border-t border-border bg-background pb-20 md:pb-8">
+        <div className="max-w-5xl mx-auto px-4 text-center space-y-4">
+          <div className="flex items-center justify-center gap-4 text-sm">
+            <Link to={createPageUrl('About')} className="text-muted-foreground hover:text-brand transition-colors">
+              About
+            </Link>
+            <span className="text-border">•</span>
+            <Link to={createPageUrl('Contact')} className="text-muted-foreground hover:text-brand transition-colors">
+              Contact
+            </Link>
+          </div>
           <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
             <Shield className="w-4 h-4 text-brand" />
             <span>Powered by UCP — Patent Pending (Application No. 63/928,882) — Omega UI, LLC</span>
