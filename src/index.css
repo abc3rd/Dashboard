@@ -82,8 +82,12 @@ button:focus-visible {
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 300 100% 46%;
+    --primary-foreground: 0 0% 100%;
+    --brand: 300 100% 46%;
+    --brand-foreground: 0 0% 100%;
+    --brand-muted: 0 0% 76.5%;
+    --brand-dark: 300 100% 30%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
     --muted: 0 0% 96.1%;
@@ -117,8 +121,12 @@ button:focus-visible {
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
+    --primary: 300 100% 56%;
+    --primary-foreground: 0 0% 100%;
+    --brand: 300 100% 56%;
+    --brand-foreground: 0 0% 100%;
+    --brand-muted: 0 0% 76.5%;
+    --brand-dark: 300 100% 30%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 14.9%;
@@ -155,4 +163,55 @@ button:focus-visible {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* ===== Mobile WebView Optimizations ===== */
+html {
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  overscroll-behavior-y: none;
+}
+
+/* Disable text selection on interactive widgets */
+button,
+a,
+[role="button"],
+nav {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Re-enable selection for inputs and content areas */
+input,
+textarea,
+[contenteditable],
+select {
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+/* Minimum tap target size on mobile */
+@media (max-width: 768px) {
+  button:not(.exclude-min-tap),
+  a[role="button"]:not(.exclude-min-tap) {
+    min-height: 44px;
+  }
+}
+
+/* Safe area utilities */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.safe-area-top-px {
+  top: env(safe-area-inset-top);
+}
+.safe-area-bottom-px {
+  bottom: env(safe-area-inset-bottom);
 }

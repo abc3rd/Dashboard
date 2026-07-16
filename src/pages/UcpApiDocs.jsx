@@ -191,18 +191,18 @@ interface AskResponse {
 }`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
       <div className="max-w-5xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center">
                 <Book className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-slate-900">API Documentation</h1>
-                <p className="text-sm text-slate-500">UCP Router Service Integration Guide</p>
+                <h1 className="text-2xl font-bold text-foreground">API Documentation</h1>
+                <p className="text-sm text-muted-foreground">UCP Router Service Integration Guide</p>
               </div>
             </div>
             <UcpStatusBadge showDetails />
@@ -210,7 +210,7 @@ interface AskResponse {
         </div>
 
         <Tabs defaultValue="endpoints" className="space-y-6">
-          <TabsList className="bg-slate-100 p-1">
+          <TabsList className="bg-muted p-1">
             <TabsTrigger value="endpoints" className="gap-2">
               <Server className="w-4 h-4" />
               Endpoints
@@ -227,15 +227,15 @@ interface AskResponse {
 
           {/* Endpoints Tab */}
           <TabsContent value="endpoints" className="space-y-6">
-            <Card className="border-0 shadow-lg bg-white/80">
+            <Card className="border-0 shadow-lg bg-card/80">
               <CardHeader>
                 <CardTitle className="text-lg">Base URL</CardTitle>
               </CardHeader>
               <CardContent>
-                <code className="bg-slate-100 px-3 py-2 rounded-lg text-sm block">
+                <code className="bg-muted px-3 py-2 rounded-lg text-sm block">
                   POST /api/functions/ucpRouter
                 </code>
-                <p className="text-sm text-slate-500 mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   All endpoints use POST with an <code className="bg-slate-100 px-1 rounded">action</code> field to specify the operation.
                 </p>
               </CardContent>
@@ -245,7 +245,7 @@ interface AskResponse {
               <Card key={endpoint.name} className="border-0 shadow-lg bg-white/80">
                 <CardHeader>
                   <div className="flex items-center gap-3">
-                    <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
+                    <Badge variant="outline" className="bg-brand/10 text-brand border-brand/20">
                       {endpoint.method}
                     </Badge>
                     <CardTitle className="text-lg">{endpoint.name}</CardTitle>
@@ -254,11 +254,11 @@ interface AskResponse {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <p className="text-sm font-medium text-slate-700 mb-2">Request</p>
+                    <p className="text-sm font-medium text-foreground mb-2">Request</p>
                     <CodeBlock code={endpoint.requestExample} />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-700 mb-2">Response</p>
+                    <p className="text-sm font-medium text-foreground mb-2">Response</p>
                     <CodeBlock code={endpoint.responseExample} />
                   </div>
                 </CardContent>
@@ -268,10 +268,10 @@ interface AskResponse {
 
           {/* Usage Tab */}
           <TabsContent value="usage" className="space-y-6">
-            <Card className="border-0 shadow-lg bg-white/80">
+            <Card className="border-0 shadow-lg bg-card/80">
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-amber-500" />
+                  <Zap className="w-5 h-5 text-brand" />
                   Frontend Usage
                 </CardTitle>
                 <CardDescription>
@@ -283,10 +283,10 @@ interface AskResponse {
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-lg bg-white/80">
+            <Card className="border-0 shadow-lg bg-card/80">
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Server className="w-5 h-5 text-violet-500" />
+                  <Server className="w-5 h-5 text-brand" />
                   Backend Usage
                 </CardTitle>
                 <CardDescription>
@@ -301,7 +301,7 @@ interface AskResponse {
 
           {/* Types Tab */}
           <TabsContent value="types" className="space-y-6">
-            <Card className="border-0 shadow-lg bg-white/80">
+            <Card className="border-0 shadow-lg bg-card/80">
               <CardHeader>
                 <CardTitle className="text-lg">TypeScript Definitions</CardTitle>
                 <CardDescription>
@@ -314,7 +314,7 @@ interface AskResponse {
             </Card>
 
             {serviceInfo?.success && (
-              <Card className="border-0 shadow-lg bg-white/80">
+              <Card className="border-0 shadow-lg bg-card/80">
                 <CardHeader>
                   <CardTitle className="text-lg">Service Info (Live)</CardTitle>
                 </CardHeader>

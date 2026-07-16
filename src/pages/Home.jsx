@@ -42,24 +42,24 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
       <div className="max-w-5xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-700 mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-brand to-brand-dark mb-6">
             <Sparkles className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-3">
+          <h1 className="text-4xl font-bold text-foreground mb-3">
             UCP AI Router
           </h1>
-          <div className="flex items-center justify-center gap-2 text-violet-600 mb-3">
+          <div className="flex items-center justify-center gap-2 text-brand mb-3">
             <Shield className="w-4 h-4" />
             <span className="text-sm font-medium">Patent Pending</span>
           </div>
-          <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Ask any question and watch the Universal Command Protocol (UCP) — Patent Pending — 
             route it to the optimal AI model using deterministic rules. 
-            <span className="font-medium text-slate-700"> Interpret once. Execute infinitely.</span>
+            <span className="font-medium text-foreground"> Interpret once. Execute infinitely.</span>
           </p>
           <div className="mt-4 flex items-center justify-center gap-3">
             <UcpStatusBadge showDetails />
@@ -67,9 +67,9 @@ export default function Home() {
         </div>
 
         {/* Main Input Card */}
-        <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm mb-8">
+        <Card className="border-0 shadow-xl bg-card/80 backdrop-blur-sm mb-8">
           <CardHeader className="pb-4">
-            <CardTitle className="text-lg font-semibold text-slate-800">
+            <CardTitle className="text-lg font-semibold text-card-foreground">
               Ask a Question
             </CardTitle>
           </CardHeader>

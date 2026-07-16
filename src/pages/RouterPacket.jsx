@@ -100,25 +100,25 @@ export default function RouterPacketPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center">
-        <div className="animate-pulse text-slate-400">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-br bg-gradient-to-b from-background to-muted/30 flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
       <div className="max-w-5xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center">
                 <Settings className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-slate-900">Router Packet</h1>
-                <p className="text-sm text-slate-500">Configure UCP routing rules and model selection</p>
+                <h1 className="text-2xl font-bold text-foreground">Router Packet</h1>
+                <p className="text-sm text-muted-foreground">Configure UCP routing rules and model selection</p>
               </div>
             </div>
             <UcpStatusBadge showDetails />
@@ -126,15 +126,15 @@ export default function RouterPacketPage() {
         </div>
 
         {/* Patent Pending Notice */}
-        <Card className="border-0 shadow-md bg-gradient-to-r from-violet-50 to-purple-50 border-violet-200 mb-6">
+        <Card className="border-0 shadow-md bg-gradient-to-r from-pink-50/50 to-purple-50/50 dark:from-muted/30 dark:to-muted/20 border-brand/20 mb-6">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
-              <Shield className="w-5 h-5 text-violet-600 shrink-0 mt-0.5" />
+              <Shield className="w-5 h-5 text-brand shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm font-medium text-violet-900">
+                <p className="text-sm font-medium text-brand">
                   This is the UCP Routing Packet (Patent Pending)
                 </p>
-                <p className="text-xs text-violet-700 mt-1">
+                <p className="text-xs text-brand/80 mt-1">
                   All routing behavior is derived from this standardized, deterministic configuration file.
                   UCP Router Packets are portable inference rules — Patent Pending under Application No. 63/928,882.
                 </p>
@@ -145,7 +145,7 @@ export default function RouterPacketPage() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-slate-100 p-1">
+          <TabsList className="bg-muted p-1">
             <TabsTrigger value="view" className="gap-2">
               <Eye className="w-4 h-4" />
               View JSON
@@ -160,7 +160,7 @@ export default function RouterPacketPage() {
           <TabsContent value="view" className="space-y-6">
             <div className="grid gap-6 lg:grid-cols-2">
               {/* JSON Viewer */}
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="text-lg">Current Router Packet</CardTitle>
                   <CardDescription>
@@ -180,7 +180,7 @@ export default function RouterPacketPage() {
           {/* Edit Tab */}
           <TabsContent value="edit" className="space-y-6">
             {/* Models Overview */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-lg">Available Models</CardTitle>
                 <CardDescription>Models registered in this router packet</CardDescription>
@@ -190,10 +190,10 @@ export default function RouterPacketPage() {
                   {editedPacket?.models?.map((model) => (
                     <div
                       key={model.id}
-                      className="p-4 rounded-xl bg-slate-50 border border-slate-100"
+                      className="p-4 rounded-xl bg-muted/50 border border-border"
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="font-semibold text-slate-800">{model.id}</span>
+                        <span className="font-semibold text-card-foreground">{model.id}</span>
                         <div className="flex gap-2">
                           <span className="text-xs px-2 py-1 rounded-full bg-emerald-100 text-emerald-700">
                             Quality: {model.qualityScore}
@@ -203,8 +203,8 @@ export default function RouterPacketPage() {
                           </span>
                         </div>
                       </div>
-                      <p className="text-sm text-slate-500">{model.description}</p>
-                      <p className="text-xs text-slate-400 mt-1">Max tokens: {model.maxTokens}</p>
+                      <p className="text-sm text-muted-foreground">{model.description}</p>
+                      <p className="text-xs text-muted-foreground/70 mt-1">Max tokens: {model.maxTokens}</p>
                     </div>
                   ))}
                 </div>
@@ -212,7 +212,7 @@ export default function RouterPacketPage() {
             </Card>
 
             {/* Selection Rules */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-lg">Selection Rules</CardTitle>
                 <CardDescription>
@@ -231,7 +231,7 @@ export default function RouterPacketPage() {
             </Card>
 
             {/* Fallback Model */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-lg">Fallback Model</CardTitle>
                 <CardDescription>
@@ -240,7 +240,7 @@ export default function RouterPacketPage() {
               </CardHeader>
               <CardContent>
                 <div className="max-w-xs">
-                  <Label className="text-xs text-slate-500 mb-2 block">Default Model</Label>
+                  <Label className="text-xs text-muted-foreground mb-2 block">Default Model</Label>
                   <Select
                     value={editedPacket?.selection_policy?.fallback_model || ''}
                     onValueChange={handleFallbackChange}
@@ -264,7 +264,7 @@ export default function RouterPacketPage() {
             <div className="flex items-center justify-between pt-4">
               <div className="flex items-center gap-2">
                 {hasChanges && (
-                  <span className="flex items-center gap-1 text-sm text-amber-600">
+                  <span className="flex items-center gap-1 text-sm text-amber-500">
                     <AlertCircle className="w-4 h-4" />
                     Unsaved changes
                   </span>
@@ -282,7 +282,7 @@ export default function RouterPacketPage() {
                 <Button
                   onClick={handleSave}
                   disabled={!hasChanges || saveMutation.isPending}
-                  className="bg-slate-900 hover:bg-slate-800"
+                  className="bg-brand hover:bg-brand-dark"
                 >
                   {saveMutation.isPending ? (
                     <span className="flex items-center gap-2">

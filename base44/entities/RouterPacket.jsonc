@@ -1,0 +1,125 @@
+{
+  "name": "RouterPacket",
+  "type": "object",
+  "properties": {
+    "ucp_version": {
+      "type": "string",
+      "description": "UCP protocol version"
+    },
+    "command_type": {
+      "type": "string",
+      "description": "Type of command (ai_router)"
+    },
+    "schema": {
+      "type": "object",
+      "description": "Input/output schema definition",
+      "properties": {
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "models": {
+      "type": "array",
+      "description": "Available AI models",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "maxTokens": {
+            "type": "number"
+          },
+          "costScore": {
+            "type": "number"
+          },
+          "qualityScore": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "selection_policy": {
+      "type": "object",
+      "description": "Model selection rules and fallback",
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "condition": {
+                "type": "object",
+                "properties": {
+                  "prompt_length_lt": {
+                    "type": "number"
+                  },
+                  "prompt_length_gte": {
+                    "type": "number"
+                  },
+                  "contains_keywords": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "choose_model": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "fallback_model": {
+          "type": "string"
+        }
+      }
+    },
+    "signature": {
+      "type": "string",
+      "description": "Packet signature for verification"
+    }
+  },
+  "required": [
+    "ucp_version",
+    "command_type",
+    "models",
+    "selection_policy"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

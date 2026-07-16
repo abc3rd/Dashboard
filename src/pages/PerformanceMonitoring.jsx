@@ -198,17 +198,17 @@ export default function PerformanceMonitoring() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-pink-50">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ea00ea] to-pink-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center">
               <Activity className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Performance Monitoring</h1>
-              <p className="text-sm text-gray-500">Real-time UCP Router analytics</p>
+              <h1 className="text-2xl font-bold text-foreground">Performance Monitoring</h1>
+              <p className="text-sm text-muted-foreground">Real-time UCP Router analytics</p>
             </div>
           </div>
 
@@ -230,7 +230,7 @@ export default function PerformanceMonitoring() {
               variant={autoRefresh ? "default" : "outline"}
               size="sm"
               onClick={() => setAutoRefresh(!autoRefresh)}
-              className={cn(autoRefresh && "bg-[#ea00ea] hover:bg-pink-600")}
+              className={cn(autoRefresh && "bg-brand hover:bg-brand-dark")}
             >
               <RefreshCw className={cn("w-4 h-4 mr-2", autoRefresh && "animate-spin")} />
               {autoRefresh ? "Live" : "Paused"}
@@ -275,12 +275,12 @@ export default function PerformanceMonitoring() {
           <Card className="border-0 shadow-md">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-pink-100 flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-[#ea00ea]" />
+                <div className="w-10 h-10 rounded-lg bg-brand/10 flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-brand" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{metrics?.totalQueries || 0}</p>
-                  <p className="text-xs text-gray-500">Total Queries</p>
+                  <p className="text-2xl font-bold text-foreground">{metrics?.totalQueries || 0}</p>
+                  <p className="text-xs text-muted-foreground">Total Queries</p>
                 </div>
               </div>
             </CardContent>
@@ -289,12 +289,12 @@ export default function PerformanceMonitoring() {
           <Card className="border-0 shadow-md">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
-                  <Clock className="w-5 h-5 text-gray-600" />
+                <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-muted-foreground" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{metrics?.avgLatency || 0}ms</p>
-                  <p className="text-xs text-gray-500">Avg Latency</p>
+                  <p className="text-2xl font-bold text-foreground">{metrics?.avgLatency || 0}ms</p>
+                  <p className="text-xs text-muted-foreground">Avg Latency</p>
                 </div>
               </div>
             </CardContent>
@@ -303,12 +303,12 @@ export default function PerformanceMonitoring() {
           <Card className="border-0 shadow-md">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-pink-100 flex items-center justify-center">
-                  <DollarSign className="w-5 h-5 text-[#ea00ea]" />
+                <div className="w-10 h-10 rounded-lg bg-brand/10 flex items-center justify-center">
+                  <DollarSign className="w-5 h-5 text-brand" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">${metrics?.totalCost?.toFixed(4) || '0.00'}</p>
-                  <p className="text-xs text-gray-500">Total Cost</p>
+                  <p className="text-2xl font-bold text-foreground">${metrics?.totalCost?.toFixed(4) || '0.00'}</p>
+                  <p className="text-xs text-muted-foreground">Total Cost</p>
                 </div>
               </div>
             </CardContent>
@@ -317,12 +317,12 @@ export default function PerformanceMonitoring() {
           <Card className="border-0 shadow-md bg-gradient-to-br from-pink-50 to-purple-50">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#ea00ea] to-pink-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center">
                   <Zap className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-[#ea00ea]">{metrics?.savingsPercent?.toFixed(0) || 0}%</p>
-                  <p className="text-xs text-pink-600">Cost Savings</p>
+                  <p className="text-2xl font-bold text-brand">{metrics?.savingsPercent?.toFixed(0) || 0}%</p>
+                  <p className="text-xs text-brand/80">Cost Savings</p>
                 </div>
               </div>
             </CardContent>

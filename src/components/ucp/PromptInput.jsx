@@ -87,7 +87,7 @@ export default function PromptInput({ value, onChange, onSubmit, isLoading, plac
         <Button
           onClick={onSubmit}
           disabled={!value.trim() || isLoading}
-          className="bg-slate-900 hover:bg-slate-800 text-white px-6"
+          className="bg-brand hover:bg-brand-dark text-white px-6"
         >
           {isLoading ? (
             <>

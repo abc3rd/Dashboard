@@ -1,0 +1,67 @@
+{
+  "name": "QueryLog",
+  "type": "object",
+  "properties": {
+    "prompt": {
+      "type": "string",
+      "description": "User's original question"
+    },
+    "answer": {
+      "type": "string",
+      "description": "AI model's response"
+    },
+    "chosen_model": {
+      "type": "string",
+      "description": "ID of the model that was selected"
+    },
+    "confidence": {
+      "type": "number",
+      "description": "Response confidence score (0-1)"
+    },
+    "latency_ms": {
+      "type": "number",
+      "description": "Response time in milliseconds"
+    }
+  },
+  "required": [
+    "prompt",
+    "answer",
+    "chosen_model"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
