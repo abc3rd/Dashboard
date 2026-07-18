@@ -6,9 +6,9 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    // Delete the user's query logs (user-scoped via RLS)
+    // Delete the caller's own query logs using service role to bypass admin-only delete RLS
     try {
-      await base44.entities.QueryLog.deleteMany({});
+      await base44.asServiceRole.entities.QueryLog.deleteMany({ created_by_id: user.id });
     } catch (e) {
       console.error('QueryLog deletion failed:', e.message);
     }
