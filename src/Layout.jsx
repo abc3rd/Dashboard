@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { Sparkles, Settings, MessageSquare, Book, Shield, Activity, ChevronLeft, Crown } from 'lucide-react';
@@ -19,6 +19,25 @@ const PAGE_TITLES = {
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const [direction, setDirection] = useState(1);
+  const stackRef = useRef([location.pathname]);
+
+  // Detect forward (push) vs backward (pop) navigation for directional transitions
+  useEffect(() => {
+    const stack = stackRef.current;
+    const current = location.pathname;
+    const idx = stack.indexOf(current);
+    if (idx === -1) {
+      stack.push(current);
+      setDirection(1);
+    } else if (idx === stack.length - 2) {
+      stack.pop();
+      setDirection(-1);
+    } else if (idx < stack.length - 1) {
+      stack.splice(idx + 1);
+      setDirection(-1);
+    }
+  }, [location.pathname]);
 
   const handleNavClick = (e, itemName) => {
     if (currentPageName === itemName) {
@@ -117,9 +136,9 @@ export default function Layout({ children, currentPageName }) {
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: direction > 0 ? 60 : -60 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
+            exit={{ opacity: 0, x: direction > 0 ? -60 : 60 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
           >
             {children}

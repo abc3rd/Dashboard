@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp, Clock, History } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock, History, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import ModelBadge from './ModelBadge';
 import ConfidenceMeter from './ConfidenceMeter';
@@ -83,7 +83,7 @@ function ExpandableRow({ query }) {
   );
 }
 
-export default function QueryHistoryTable({ limit = 10 }) {
+export default function QueryHistoryTable({ limit = 10, optimisticQuery = null }) {
   const { data: queries = [], isLoading } = useQuery({
     queryKey: ['recentQueries', limit],
     queryFn: () => base44.entities.QueryLog.list('-created_date', limit),
@@ -133,6 +133,29 @@ export default function QueryHistoryTable({ limit = 10 }) {
               </TableRow>
             </TableHeader>
             <TableBody>
+              {optimisticQuery && (
+                <TableRow className="bg-brand/5">
+                  <TableCell className="text-sm text-muted-foreground">
+                    <span className="flex items-center gap-1.5">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-brand" />
+                      Now
+                    </span>
+                  </TableCell>
+                  <TableCell className="max-w-xs">
+                    <p className="text-sm text-foreground truncate">{optimisticQuery.prompt}</p>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-xs text-muted-foreground italic">routing…</span>
+                  </TableCell>
+                  <TableCell>
+                    <div className="w-24 h-2 rounded-full bg-muted animate-pulse" />
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  </TableCell>
+                  <TableCell />
+                </TableRow>
+              )}
               {queries.map((query) => (
                 <ExpandableRow key={query.id} query={query} />
               ))}

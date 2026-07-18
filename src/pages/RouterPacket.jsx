@@ -4,7 +4,7 @@ import { Settings, Save, RotateCcw, AlertCircle, Eye, Pencil, Shield, GitBranch 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import ResponsiveModelSelect from '@/components/ucp/ResponsiveModelSelect';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import JsonViewer from '@/components/ucp/JsonViewer';
@@ -244,21 +244,11 @@ export default function RouterPacketPage() {
               <CardContent>
                 <div className="max-w-xs">
                   <Label className="text-xs text-muted-foreground mb-2 block">Default Model</Label>
-                  <Select
+                  <ResponsiveModelSelect
                     value={editedPacket?.selection_policy?.fallback_model || ''}
                     onValueChange={handleFallbackChange}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {editedPacket?.models?.map((model) => (
-                        <SelectItem key={model.id} value={model.id}>
-                          {model.id}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    models={editedPacket?.models || []}
+                  />
                 </div>
               </CardContent>
             </Card>

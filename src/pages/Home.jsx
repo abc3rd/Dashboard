@@ -16,6 +16,7 @@ import { useSubscription, useDailyQueryCount, FREE_DAILY_LIMIT } from '@/hooks/u
 export default function Home() {
   const [prompt, setPrompt] = useState('');
   const [result, setResult] = useState(null);
+  const [optimisticQuery, setOptimisticQuery] = useState(null);
   const queryClient = useQueryClient();
   const { tier } = useSubscription();
   const todayCount = useDailyQueryCount();
@@ -41,11 +42,15 @@ export default function Home() {
       setPrompt('');
       queryClient.invalidateQueries({ queryKey: ['recentQueries'] });
       queryClient.invalidateQueries({ queryKey: ['allQueryLogs'] });
+    },
+    onSettled: () => {
+      setOptimisticQuery(null);
     }
   });
 
   const handleSubmit = () => {
     if (prompt.trim()) {
+      setOptimisticQuery({ id: 'optimistic', prompt, created_date: new Date().toISOString() });
       askMutation.mutate(prompt);
     }
   };
@@ -160,7 +165,7 @@ export default function Home() {
           </div>
 
           {/* Query History Table */}
-          <QueryHistoryTable limit={10} />
+          <QueryHistoryTable limit={10} optimisticQuery={optimisticQuery} />
         </PullToRefresh>
       </div>
     </div>
