@@ -1,0 +1,70 @@
+{
+  "name": "Subscription",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the subscribed user (from auth session)"
+    },
+    "checkout_id": {
+      "type": "string",
+      "description": "Wix checkout session ID used to correlate the order_approved webhook"
+    },
+    "subscription_id": {
+      "type": "string",
+      "description": "Wix subscription contract ID, stored on order approval"
+    },
+    "plan": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "annual",
+        "lifetime"
+      ],
+      "description": "Purchased Omega Access plan"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "canceled",
+        "ended"
+      ],
+      "default": "pending",
+      "description": "Current subscription state"
+    }
+  },
+  "required": [
+    "user_email",
+    "plan",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

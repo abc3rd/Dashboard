@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { createPageUrl } from './utils';
-import { Sparkles, Settings, MessageSquare, Book, Shield, Activity, ChevronLeft } from 'lucide-react';
+import { Sparkles, Settings, MessageSquare, Book, Shield, Activity, ChevronLeft, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
 import AboutUcpDrawer from '@/components/ucp/AboutUcpDrawer';
@@ -11,7 +11,9 @@ const PAGE_TITLES = {
   Home: 'Ask',
   PerformanceMonitoring: 'Monitoring',
   RouterPacket: 'Router Packet',
-  UcpApiDocs: 'API Docs'
+  UcpApiDocs: 'API Docs',
+  Pricing: 'Pricing',
+  ThankYou: 'Thank You'
 };
 
 export default function Layout({ children, currentPageName }) {
@@ -28,6 +30,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Home', icon: MessageSquare, label: 'Ask' },
     { name: 'PerformanceMonitoring', icon: Activity, label: 'Monitoring' },
     { name: 'RouterPacket', icon: Settings, label: 'Packet' },
+    { name: 'Pricing', icon: Crown, label: 'Pricing' },
     { name: 'UcpApiDocs', icon: Book, label: 'Docs' }
   ];
 

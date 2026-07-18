@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, Shield } from 'lucide-react';
+import { Sparkles, Shield, Crown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PromptInput from '@/components/ucp/PromptInput';
@@ -10,11 +11,16 @@ import MetricsCard from '@/components/ucp/MetricsCard';
 import QueryHistoryTable from '@/components/ucp/QueryHistoryTable';
 import PullToRefresh from '@/components/ucp/PullToRefresh';
 import { UcpRouterService } from '@/components/ucp/UcpService';
+import { useSubscription, useDailyQueryCount, FREE_DAILY_LIMIT } from '@/hooks/useSubscription';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
   const [result, setResult] = useState(null);
   const queryClient = useQueryClient();
+  const { tier } = useSubscription();
+  const todayCount = useDailyQueryCount();
+  const isPro = tier === 'pro';
+  const remaining = Math.max(0, FREE_DAILY_LIMIT - todayCount);
 
   // Ask mutation - uses backend service
   const askMutation = useMutation({
@@ -23,7 +29,9 @@ export default function Home() {
       const response = await UcpRouterService.ask(promptText);
       
       if (!response.success) {
-        throw new Error(response.error || 'Failed to get response');
+        const err = new Error(response.message || response.error || 'Failed to get response');
+        err.code = response.error;
+        throw err;
       }
       
       return response;
@@ -67,6 +75,35 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Freemium quota indicator */}
+        {!isPro && (
+          <div className="flex items-center justify-between gap-3 mb-4 px-4 py-2.5 rounded-xl bg-muted/60 border border-border">
+            <div className="flex items-center gap-2 text-sm">
+              <Sparkles className="w-4 h-4 text-brand" />
+              <span className="text-muted-foreground">
+                Free tier • <span className="font-medium text-foreground">{remaining}</span>/{FREE_DAILY_LIMIT} queries left today
+              </span>
+            </div>
+            <Link
+              to="/Pricing"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:underline"
+            >
+              <Crown className="w-4 h-4" /> Upgrade
+            </Link>
+          </div>
+        )}
+        {isPro && (
+          <div className="flex items-center justify-between gap-3 mb-4 px-4 py-2.5 rounded-xl bg-brand/10 border border-brand/30">
+            <div className="flex items-center gap-2 text-sm">
+              <Crown className="w-4 h-4 text-brand" />
+              <span className="font-medium text-brand">Omega Access — unlimited routing</span>
+            </div>
+            <Link to="/Pricing" className="text-sm text-brand/80 hover:underline">
+              Manage
+            </Link>
+          </div>
+        )}
+
         {/* Main Input Card */}
         <Card className="border-0 shadow-xl bg-card/80 backdrop-blur-sm mb-8">
           <CardHeader className="pb-4">
@@ -96,9 +133,17 @@ export default function Home() {
         {askMutation.isError && (
           <Card className="border-red-200 bg-red-50 mb-8">
             <CardContent className="p-4">
-              <p className="text-red-700">
-                An error occurred: {askMutation.error?.message || 'Unknown error'}
+              <p className="text-red-700 mb-2">
+                {askMutation.error?.message || 'Unknown error'}
               </p>
+              {askMutation.error?.code === 'free_limit_reached' && (
+                <Link
+                  to="/Pricing"
+                  className="inline-flex items-center gap-1.5 mt-2 px-4 py-2 rounded-lg bg-brand text-white text-sm font-medium hover:bg-brand-dark transition-colors"
+                >
+                  <Crown className="w-4 h-4" /> Upgrade to Omega Access
+                </Link>
+              )}
             </CardContent>
           </Card>
         )}

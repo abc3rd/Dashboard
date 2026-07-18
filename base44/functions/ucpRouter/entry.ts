@@ -173,6 +173,21 @@ async function callModelAdapter(modelId, prompt) {
 }
 
 // ============================================
+// FREEMIUM TIER ENFORCEMENT
+// ============================================
+
+const FREE_DAILY_LIMIT = 10;
+
+async function getUserTier(base44, email) {
+  try {
+    const subs = await base44.asServiceRole.entities.Subscription.filter({ user_email: email });
+    return subs.some((s) => s.status === 'active') ? 'pro' : 'free';
+  } catch (e) {
+    return 'free';
+  }
+}
+
+// ============================================
 // MAIN HANDLER
 // ============================================
 
@@ -257,6 +272,48 @@ Deno.serve(async (req) => {
           success: false, 
           error: 'Prompt is required and must be a string' 
         }, { status: 400 });
+      }
+
+      // Freemium tier enforcement: free users capped at FREE_DAILY_LIMIT queries/day
+      try {
+        let currentUser = null;
+        try {
+          currentUser = await base44.auth.me();
+        } catch (e) {
+          currentUser = null;
+        }
+
+        if (currentUser && currentUser.email) {
+          const tier = await getUserTier(base44, currentUser.email);
+          if (tier !== 'pro') {
+            const startOfDay = new Date();
+            startOfDay.setHours(0, 0, 0, 0);
+            let todayCount = 0;
+            try {
+              const todayLogs = await base44.entities.QueryLog.filter(
+                { created_by_id: currentUser.id, created_date: { $gte: startOfDay.toISOString() } },
+                '-created_date',
+                200
+              );
+              todayCount = todayLogs.length;
+            } catch (e) {
+              todayCount = 0;
+            }
+
+            if (todayCount >= FREE_DAILY_LIMIT) {
+              return Response.json({
+                success: false,
+                error: 'free_limit_reached',
+                message: `You've reached the free limit of ${FREE_DAILY_LIMIT} queries per day. Upgrade to Omega Access for unlimited routing.`,
+                limit: FREE_DAILY_LIMIT,
+                used: todayCount
+              }, { status: 402 });
+            }
+          }
+        }
+      } catch (tierError) {
+        // Never block a query due to tier-check failures — fail open
+        console.error('Tier enforcement error:', tierError.message);
       }
       
       try {
