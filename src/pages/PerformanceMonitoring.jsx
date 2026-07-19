@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import ResponsiveSelect from '@/components/ucp/ResponsiveSelect';
 import { cn } from '@/lib/utils';
 import { 
   LineChart, Line, AreaChart, Area, BarChart, Bar,
@@ -191,8 +191,8 @@ export default function PerformanceMonitoring() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center">
-        <RefreshCw className="w-8 h-8 text-slate-400 animate-spin" />
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 flex items-center justify-center">
+        <RefreshCw className="w-8 h-8 text-muted-foreground animate-spin" />
       </div>
     );
   }
@@ -213,18 +213,19 @@ export default function PerformanceMonitoring() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Select value={timeRange} onValueChange={setTimeRange}>
-              <SelectTrigger className="w-32">
-                <Calendar className="w-4 h-4 mr-2" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1h">Last Hour</SelectItem>
-                <SelectItem value="24h">Last 24h</SelectItem>
-                <SelectItem value="7d">Last 7 Days</SelectItem>
-                <SelectItem value="30d">Last 30 Days</SelectItem>
-              </SelectContent>
-            </Select>
+            <ResponsiveSelect
+              value={timeRange}
+              onValueChange={setTimeRange}
+              triggerClassName="w-36"
+              triggerIcon={<Calendar className="w-4 h-4 mr-2 shrink-0" />}
+              title="Time Range"
+              options={[
+                { value: '1h', label: 'Last Hour' },
+                { value: '24h', label: 'Last 24h' },
+                { value: '7d', label: 'Last 7 Days' },
+                { value: '30d', label: 'Last 30 Days' }
+              ]}
+            />
 
             <Button
               variant={autoRefresh ? "default" : "outline"}
@@ -244,7 +245,7 @@ export default function PerformanceMonitoring() {
             {alerts.map(alert => (
               <Card key={alert.id} className={cn(
                 "border-l-4",
-                alert.type === 'error' ? "border-l-red-500 bg-red-50" : "border-l-amber-500 bg-amber-50"
+                alert.type === 'error' ? "border-l-red-500 bg-red-50 dark:bg-red-950/40" : "border-l-amber-500 bg-amber-50 dark:bg-amber-950/40"
               )}>
                 <CardContent className="p-4 flex items-center gap-3">
                   <AlertTriangle className={cn(
@@ -254,11 +255,11 @@ export default function PerformanceMonitoring() {
                   <div className="flex-1">
                     <p className={cn(
                       "font-medium",
-                      alert.type === 'error' ? "text-red-700" : "text-amber-700"
+                      alert.type === 'error' ? "text-red-700 dark:text-red-300" : "text-amber-700 dark:text-amber-300"
                     )}>{alert.title}</p>
                     <p className={cn(
                       "text-sm",
-                      alert.type === 'error' ? "text-red-600" : "text-amber-600"
+                      alert.type === 'error' ? "text-red-600 dark:text-red-400" : "text-amber-600 dark:text-amber-400"
                     )}>{alert.message}</p>
                   </div>
                   <Badge variant="outline" className="text-xs">
@@ -314,7 +315,7 @@ export default function PerformanceMonitoring() {
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-md bg-gradient-to-br from-pink-50 to-purple-50">
+          <Card className="border-0 shadow-md bg-gradient-to-br from-pink-50 to-purple-50 dark:from-pink-950/40 dark:to-purple-950/40">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center">
@@ -330,7 +331,7 @@ export default function PerformanceMonitoring() {
         </div>
 
         <Tabs defaultValue="volume" className="space-y-6">
-          <TabsList className="bg-white border shadow-sm">
+          <TabsList className="bg-muted border shadow-sm">
             <TabsTrigger value="volume">Query Volume</TabsTrigger>
             <TabsTrigger value="latency">Latency</TabsTrigger>
             <TabsTrigger value="costs">Cost Breakdown</TabsTrigger>
@@ -414,21 +415,21 @@ export default function PerformanceMonitoring() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mt-6">
-                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                  <div className="p-4 rounded-xl bg-muted border border-border">
                     <div className="flex items-center gap-2 mb-2">
-                      <Zap className="w-4 h-4 text-gray-600" />
-                      <span className="font-medium text-gray-700">Fast Model</span>
+                      <Zap className="w-4 h-4 text-muted-foreground" />
+                      <span className="font-medium text-card-foreground">Fast Model</span>
                     </div>
-                    <p className="text-2xl font-bold text-gray-800">{metrics?.avgFastLatency || 0}ms</p>
-                    <p className="text-xs text-gray-600">Average latency</p>
+                    <p className="text-2xl font-bold text-foreground">{metrics?.avgFastLatency || 0}ms</p>
+                    <p className="text-xs text-muted-foreground">Average latency</p>
                   </div>
-                  <div className="p-4 rounded-xl bg-pink-50 border border-pink-200">
+                  <div className="p-4 rounded-xl bg-pink-50 dark:bg-pink-950/40 border border-pink-200 dark:border-pink-900">
                     <div className="flex items-center gap-2 mb-2">
                       <Brain className="w-4 h-4 text-[#ea00ea]" />
                       <span className="font-medium text-[#ea00ea]">Smart Model</span>
                     </div>
                     <p className="text-2xl font-bold text-[#ea00ea]">{metrics?.avgSmartLatency || 0}ms</p>
-                    <p className="text-xs text-pink-600">Average latency</p>
+                    <p className="text-xs text-pink-600 dark:text-pink-400">Average latency</p>
                   </div>
                 </div>
               </CardContent>
@@ -474,37 +475,37 @@ export default function PerformanceMonitoring() {
                   <CardDescription>Detailed cost analysis</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                  <div className="p-4 rounded-xl bg-muted border border-border">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Zap className="w-4 h-4 text-gray-600" />
-                        <span className="font-medium text-gray-700">Fast Model</span>
+                        <Zap className="w-4 h-4 text-muted-foreground" />
+                        <span className="font-medium text-card-foreground">Fast Model</span>
                       </div>
-                      <span className="text-sm text-gray-600">{metrics?.fastQueries || 0} queries</span>
+                      <span className="text-sm text-muted-foreground">{metrics?.fastQueries || 0} queries</span>
                     </div>
-                    <p className="text-xl font-bold text-gray-800 mt-2">${metrics?.fastCost?.toFixed(4) || '0.0000'}</p>
-                    <p className="text-xs text-gray-600">@ ${MODEL_COSTS.fast_model}/query</p>
+                    <p className="text-xl font-bold text-foreground mt-2">${metrics?.fastCost?.toFixed(4) || '0.0000'}</p>
+                    <p className="text-xs text-muted-foreground">@ ${MODEL_COSTS.fast_model}/query</p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-pink-50 border border-pink-200">
+                  <div className="p-4 rounded-xl bg-pink-50 dark:bg-pink-950/40 border border-pink-200 dark:border-pink-900">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Brain className="w-4 h-4 text-[#ea00ea]" />
                         <span className="font-medium text-[#ea00ea]">Smart Model</span>
                       </div>
-                      <span className="text-sm text-pink-600">{metrics?.smartQueries || 0} queries</span>
+                      <span className="text-sm text-pink-600 dark:text-pink-400">{metrics?.smartQueries || 0} queries</span>
                     </div>
                     <p className="text-xl font-bold text-[#ea00ea] mt-2">${metrics?.smartCost?.toFixed(4) || '0.0000'}</p>
-                    <p className="text-xs text-pink-600">@ ${MODEL_COSTS.smart_model}/query</p>
+                    <p className="text-xs text-pink-600 dark:text-pink-400">@ ${MODEL_COSTS.smart_model}/query</p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-gradient-to-br from-pink-100 to-purple-100 border border-pink-300">
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-950 dark:to-purple-950 border border-pink-300 dark:border-pink-800">
                     <div className="flex items-center justify-between">
                       <span className="font-medium text-[#ea00ea]">Total Savings with UCP</span>
                       <CheckCircle className="w-5 h-5 text-[#ea00ea]" />
                     </div>
                     <p className="text-2xl font-bold text-[#ea00ea] mt-2">${metrics?.savings?.toFixed(4) || '0.0000'}</p>
-                    <p className="text-xs text-pink-600">vs. using Smart Model for all queries</p>
+                    <p className="text-xs text-pink-600 dark:text-pink-400">vs. using Smart Model for all queries</p>
                   </div>
                 </CardContent>
               </Card>

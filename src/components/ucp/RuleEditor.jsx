@@ -26,12 +26,12 @@ export default function RuleEditor({ rules, models, onChange, onAdd, onRemove })
   return (
     <div className="space-y-4">
       {rules.map((rule, index) => (
-        <Card key={index} className="border-slate-200">
+        <Card key={index} className="border-border">
           <CardContent className="p-4">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-xs text-slate-500">Prompt Length Less Than</Label>
+                  <Label className="text-xs text-muted-foreground">Prompt Length Less Than</Label>
                   <Input
                     type="number"
                     placeholder="e.g., 100"
@@ -42,7 +42,7 @@ export default function RuleEditor({ rules, models, onChange, onAdd, onRemove })
                 </div>
                 
                 <div className="space-y-2">
-                  <Label className="text-xs text-slate-500">Prompt Length ≥</Label>
+                  <Label className="text-xs text-muted-foreground">Prompt Length ≥</Label>
                   <Input
                     type="number"
                     placeholder="e.g., 100"
@@ -53,7 +53,7 @@ export default function RuleEditor({ rules, models, onChange, onAdd, onRemove })
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-xs text-slate-500">Route To</Label>
+                  <Label className="text-xs text-muted-foreground">Route To</Label>
                   <ResponsiveModelSelect
                     value={rule.choose_model}
                     onValueChange={(value) => handleRuleChange(index, 'choose_model', value)}
@@ -67,7 +67,7 @@ export default function RuleEditor({ rules, models, onChange, onAdd, onRemove })
                 variant="ghost"
                 size="icon"
                 onClick={() => onRemove(index)}
-                className="text-slate-400 hover:text-red-500 shrink-0"
+                className="text-muted-foreground hover:text-red-500 shrink-0"
               >
                 <Trash2 className="w-4 h-4" />
               </Button>

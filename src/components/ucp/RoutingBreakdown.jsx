@@ -7,8 +7,8 @@ import { cn } from '@/lib/utils';
 export default function RoutingBreakdown({ packet }) {
   if (!packet) {
     return (
-      <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-        <CardContent className="p-8 text-center text-slate-400">
+      <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
+        <CardContent className="p-8 text-center text-muted-foreground">
           No routing packet loaded
         </CardContent>
       </Card>
@@ -46,7 +46,7 @@ export default function RoutingBreakdown({ packet }) {
   };
 
   return (
-    <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+    <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-2">
           <Shield className="w-5 h-5 text-violet-600" />
@@ -65,23 +65,23 @@ export default function RoutingBreakdown({ packet }) {
           return (
             <div 
               key={index}
-              className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100"
+              className="flex items-center gap-3 p-4 bg-muted rounded-xl border border-border"
             >
-              <div className="w-8 h-8 rounded-lg bg-slate-200 flex items-center justify-center text-sm font-bold text-slate-600">
+              <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-sm font-bold text-muted-foreground">
                 {index + 1}
               </div>
               
               <div className="flex-1">
                 <div className="flex flex-wrap gap-2">
                   {conditions.map((cond, i) => (
-                    <Badge key={i} variant="outline" className="bg-white">
+                    <Badge key={i} variant="outline" className="bg-card">
                       {cond}
                     </Badge>
                   ))}
                 </div>
               </div>
               
-              <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
+              <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0" />
               
               <Badge className={cn('gap-1.5', getModelColor(rule.choose_model))}>
                 <ModelIcon className="w-3.5 h-3.5" />
@@ -93,16 +93,16 @@ export default function RoutingBreakdown({ packet }) {
 
         {/* Fallback */}
         {fallback && (
-          <div className="flex items-center gap-3 p-4 bg-slate-100 rounded-xl border-2 border-dashed border-slate-300">
-            <div className="w-8 h-8 rounded-lg bg-slate-300 flex items-center justify-center">
-              <AlertTriangle className="w-4 h-4 text-slate-600" />
+          <div className="flex items-center gap-3 p-4 bg-muted rounded-xl border-2 border-dashed border-border">
+            <div className="w-8 h-8 rounded-lg bg-muted-foreground/30 flex items-center justify-center">
+              <AlertTriangle className="w-4 h-4 text-muted-foreground" />
             </div>
             
             <div className="flex-1">
-              <span className="text-sm text-slate-600">Fallback (no rules match)</span>
+              <span className="text-sm text-muted-foreground">Fallback (no rules match)</span>
             </div>
             
-            <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
+            <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0" />
             
             <Badge className={cn('gap-1.5', getModelColor(fallback))}>
               {fallback === 'fast_model' ? <Zap className="w-3.5 h-3.5" /> : <Brain className="w-3.5 h-3.5" />}
@@ -112,21 +112,21 @@ export default function RoutingBreakdown({ packet }) {
         )}
 
         {/* Models Summary */}
-        <div className="pt-4 border-t border-slate-200">
-          <p className="text-xs text-slate-500 mb-3">Available Models</p>
+        <div className="pt-4 border-t border-border">
+          <p className="text-xs text-muted-foreground mb-3">Available Models</p>
           <div className="grid gap-2 sm:grid-cols-2">
             {models?.map((model) => (
               <div 
                 key={model.id}
-                className="flex items-center gap-2 p-2 rounded-lg bg-slate-50"
+                className="flex items-center gap-2 p-2 rounded-lg bg-muted"
               >
                 {model.id === 'fast_model' ? (
                   <Zap className="w-4 h-4 text-amber-500" />
                 ) : (
                   <Brain className="w-4 h-4 text-violet-500" />
                 )}
-                <span className="text-sm font-medium text-slate-700">{model.id}</span>
-                <span className="text-xs text-slate-400 ml-auto">
+                <span className="text-sm font-medium text-card-foreground">{model.id}</span>
+                <span className="text-xs text-muted-foreground ml-auto">
                   Cost: {model.costScore} | Quality: {model.qualityScore}
                 </span>
               </div>

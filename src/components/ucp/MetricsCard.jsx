@@ -42,7 +42,7 @@ export default function MetricsCard() {
       label: 'Total Queries',
       value: totalQueries,
       icon: TrendingUp,
-      color: 'text-slate-700'
+      color: 'text-card-foreground'
     },
     {
       label: 'Fast Model Usage',
@@ -73,7 +73,7 @@ export default function MetricsCard() {
   ];
 
   return (
-    <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+    <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-2">
           <Shield className="w-5 h-5 text-violet-600" />
@@ -89,34 +89,34 @@ export default function MetricsCard() {
           {metrics.map((metric) => (
             <div 
               key={metric.label}
-              className="bg-slate-50 rounded-xl p-3 border border-slate-100"
+              className="bg-muted rounded-xl p-3 border border-border"
             >
               <div className="flex items-center gap-1.5 mb-1">
                 <metric.icon className={cn('w-4 h-4', metric.color)} />
-                <span className="text-xs text-slate-500 truncate">{metric.label}</span>
+                <span className="text-xs text-muted-foreground truncate">{metric.label}</span>
               </div>
               <p className={cn('text-xl font-bold', metric.color)}>{metric.value}</p>
               {metric.subValue && (
-                <p className="text-xs text-slate-400">{metric.subValue}</p>
+                <p className="text-xs text-muted-foreground">{metric.subValue}</p>
               )}
             </div>
           ))}
         </div>
 
         {/* Cost Savings Highlight */}
-        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-5 border border-emerald-200">
+        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/40 rounded-xl p-5 border border-emerald-200 dark:border-emerald-800">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
-              <DollarSign className="w-6 h-6 text-emerald-600" />
+            <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center shrink-0">
+              <DollarSign className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div className="flex-1">
-              <h4 className="font-semibold text-emerald-900 mb-1">
+              <h4 className="font-semibold text-emerald-900 dark:text-emerald-100 mb-1">
                 Estimated Compute Savings: {savingsPercent}%
               </h4>
-              <p className="text-sm text-emerald-700">
+              <p className="text-sm text-emerald-700 dark:text-emerald-300">
                 vs always using the Smart Model (via UCP deterministic routing)
               </p>
-              <p className="text-xs text-emerald-600 mt-2 italic">
+              <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-2 italic">
                 These savings represent the core value of UCP's interpret-once, execute-many design.
               </p>
             </div>
