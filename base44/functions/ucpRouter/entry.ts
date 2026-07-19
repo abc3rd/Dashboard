@@ -274,46 +274,47 @@ Deno.serve(async (req) => {
         }, { status: 400 });
       }
 
-      // Freemium tier enforcement: free users capped at FREE_DAILY_LIMIT queries/day
+      // Enforce authentication strictly — anonymous queries are not allowed
+      let currentUser;
       try {
-        let currentUser = null;
+        currentUser = await base44.auth.me();
+      } catch (e) {
+        currentUser = null;
+      }
+      if (!currentUser || !currentUser.email) {
+        return Response.json({
+          success: false,
+          error: 'unauthorized',
+          message: 'You must be logged in to use the UCP AI Router.'
+        }, { status: 401 });
+      }
+
+      // Freemium tier enforcement: free users capped at FREE_DAILY_LIMIT queries/day
+      const tier = await getUserTier(base44, currentUser.email);
+      if (tier !== 'pro') {
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+        let todayCount = 0;
         try {
-          currentUser = await base44.auth.me();
+          const todayLogs = await base44.entities.QueryLog.filter(
+            { created_by_id: currentUser.id, created_date: { $gte: startOfDay.toISOString() } },
+            '-created_date',
+            200
+          );
+          todayCount = todayLogs.length;
         } catch (e) {
-          currentUser = null;
+          todayCount = 0;
         }
 
-        if (currentUser && currentUser.email) {
-          const tier = await getUserTier(base44, currentUser.email);
-          if (tier !== 'pro') {
-            const startOfDay = new Date();
-            startOfDay.setHours(0, 0, 0, 0);
-            let todayCount = 0;
-            try {
-              const todayLogs = await base44.entities.QueryLog.filter(
-                { created_by_id: currentUser.id, created_date: { $gte: startOfDay.toISOString() } },
-                '-created_date',
-                200
-              );
-              todayCount = todayLogs.length;
-            } catch (e) {
-              todayCount = 0;
-            }
-
-            if (todayCount >= FREE_DAILY_LIMIT) {
-              return Response.json({
-                success: false,
-                error: 'free_limit_reached',
-                message: `You've reached the free limit of ${FREE_DAILY_LIMIT} queries per day. Upgrade to Omega Access for unlimited routing.`,
-                limit: FREE_DAILY_LIMIT,
-                used: todayCount
-              }, { status: 402 });
-            }
-          }
+        if (todayCount >= FREE_DAILY_LIMIT) {
+          return Response.json({
+            success: false,
+            error: 'free_limit_reached',
+            message: `You've reached the free limit of ${FREE_DAILY_LIMIT} queries per day. Upgrade to Omega Access for unlimited routing.`,
+            limit: FREE_DAILY_LIMIT,
+            used: todayCount
+          }, { status: 402 });
         }
-      } catch (tierError) {
-        // Never block a query due to tier-check failures — fail open
-        console.error('Tier enforcement error:', tierError.message);
       }
       
       try {
