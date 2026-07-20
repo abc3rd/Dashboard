@@ -44,7 +44,7 @@ function ExpandableRow({ query }) {
           {query.latency_ms}ms
         </TableCell>
         <TableCell>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="h-11 w-11">
             {expanded ? (
               <ChevronUp className="w-4 h-4 text-slate-400" />
             ) : (

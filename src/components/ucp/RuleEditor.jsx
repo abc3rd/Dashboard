@@ -67,7 +67,7 @@ export default function RuleEditor({ rules, models, onChange, onAdd, onRemove })
                 variant="ghost"
                 size="icon"
                 onClick={() => onRemove(index)}
-                className="text-muted-foreground hover:text-red-500 shrink-0"
+                className="text-muted-foreground hover:text-red-500 shrink-0 h-11 w-11"
               >
                 <Trash2 className="w-4 h-4" />
               </Button>

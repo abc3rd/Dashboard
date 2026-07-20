@@ -132,7 +132,7 @@ export default function Layout({ children, currentPageName }) {
       </header>
 
       {/* Main Content with slide animations */}
-      <main className="pb-16 md:pb-0">
+      <main className="md:pb-0" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
