@@ -18,6 +18,9 @@ const PAGE_TITLES = {
   Terms: 'Terms'
 };
 
+// Root bottom-tab screens that show the brand logo instead of a back button.
+const ROOT_PAGES = ['Home', 'PerformanceMonitoring', 'RouterPacket', 'Pricing', 'UcpApiDocs'];
+
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -105,7 +108,14 @@ export default function Layout({ children, currentPageName }) {
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
       >
         <div className="flex items-center h-12 px-4 gap-3">
-          {currentPageName !== 'Home' ? (
+          {ROOT_PAGES.includes(currentPageName) ? (
+            <Link to={createPageUrl('Home')} className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center">
+                <Sparkles className="w-3.5 h-3.5 text-white" />
+              </div>
+              <span className="font-semibold text-sm text-foreground">UCP Router</span>
+            </Link>
+          ) : (
             <>
               <button
                 onClick={() => navigate(-1)}
@@ -118,13 +128,6 @@ export default function Layout({ children, currentPageName }) {
                 {PAGE_TITLES[currentPageName] || ''}
               </span>
             </>
-          ) : (
-            <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center">
-                <Sparkles className="w-3.5 h-3.5 text-white" />
-              </div>
-              <span className="font-semibold text-sm text-foreground">UCP Router</span>
-            </Link>
           )}
         </div>
       </header>
