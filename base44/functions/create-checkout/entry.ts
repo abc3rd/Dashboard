@@ -10,6 +10,15 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.39';
 const WIX_API_KEY = Deno.env.get("WIX_PAYMENTS_API_KEY");
 const WIX_SITE_ID = Deno.env.get("WIX_PAYMENTS_SITE_ID");
 
+// Optional allowlist of trusted app origins (comma-separated, e.g.
+// "https://app.example.com,https://www.app.example.com"). When set, the
+// request Origin must match one of these before it is used to build checkout
+// callback URLs — prevents open redirect via a spoofed Origin header.
+const ALLOWED_ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
 interface PlanDef {
   name: string;
   price: string;
@@ -84,9 +93,37 @@ Deno.serve(async (req) => {
     }
 
     const planDef = PLANS[plan];
-    const origin = req.headers.get("Origin") || req.headers.get("origin") || "";
-    if (!origin) {
-      return Response.json({ error: "Could not determine app origin." }, { status: 400 });
+
+    // Resolve a trusted app origin for checkout callback URLs. The client-supplied
+    // Origin header is never trusted blindly (open-redirect / phishing risk).
+    const rawOrigin = req.headers.get("Origin") || req.headers.get("origin") || "";
+    const host = req.headers.get("Host") || req.headers.get("host") || "";
+    let trustedOrigin = "";
+
+    if (ALLOWED_ORIGINS.length > 0) {
+      if (!rawOrigin || !ALLOWED_ORIGINS.includes(rawOrigin)) {
+        return Response.json({ error: "Untrusted request origin." }, { status: 400 });
+      }
+      trustedOrigin = rawOrigin;
+    } else {
+      // No allowlist configured: derive from the request Host and require any
+      // present Origin to match that host before constructing callback URLs.
+      if (!host) {
+        return Response.json({ error: "Could not determine app origin." }, { status: 400 });
+      }
+      if (rawOrigin) {
+        try {
+          const originUrl = new URL(rawOrigin);
+          if (originUrl.host !== host) {
+            return Response.json({ error: "Untrusted request origin." }, { status: 400 });
+          }
+          trustedOrigin = originUrl.origin;
+        } catch (e) {
+          return Response.json({ error: "Untrusted request origin." }, { status: 400 });
+        }
+      } else {
+        trustedOrigin = `https://${host}`;
+      }
     }
 
     const item: any = {
@@ -110,8 +147,8 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           cart: { items: [item], customerInfo: { email: user.email } },
           callbackUrls: {
-            postFlowUrl: `${origin}/`,
-            thankYouPageUrl: `${origin}/ThankYou`,
+            postFlowUrl: `${trustedOrigin}/`,
+            thankYouPageUrl: `${trustedOrigin}/ThankYou`,
           },
         }),
       }
