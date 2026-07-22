@@ -56,8 +56,8 @@ export default function AboutUcpDrawer() {
             <h3 className="font-semibold text-slate-900">Key Innovations</h3>
             {features.map((feature) => (
               <div key={feature.title} className="flex gap-3">
-                <div className="w-10 h-10 rounded-lg bg-violet-100 flex items-center justify-center shrink-0">
-                  <feature.icon className="w-5 h-5 text-violet-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand/15 flex items-center justify-center shrink-0">
+                  <feature.icon className="w-5 h-5 text-brand" />
                 </div>
                 <div>
                   <h4 className="font-medium text-slate-900">{feature.title}</h4>
@@ -68,8 +68,8 @@ export default function AboutUcpDrawer() {
           </div>
 
           {/* Interpret Once, Execute Many */}
-          <div className="bg-violet-50 rounded-xl p-5 border border-violet-200">
-            <p className="text-violet-900 font-medium text-center">
+          <div className="bg-brand/10 rounded-xl p-5 border border-brand/20">
+            <p className="text-brand font-medium text-center">
               "Interpret Once. Execute Infinitely."
             </p>
           </div>

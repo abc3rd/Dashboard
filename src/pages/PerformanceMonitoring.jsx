@@ -144,7 +144,7 @@ export default function PerformanceMonitoring() {
       savingsPercent,
       modelDistribution: [
         { name: 'Fast Model', value: fastQueries, color: '#c3c3c3' },
-        { name: 'Smart Model', value: smartQueries, color: '#ea00ea' }
+        { name: 'Smart Model', value: smartQueries, color: '#31509c' }
       ]
     };
   }, [queryLogs, timeRange]);
@@ -315,7 +315,7 @@ export default function PerformanceMonitoring() {
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-md bg-gradient-to-br from-pink-50 to-purple-50 dark:from-pink-950/40 dark:to-purple-950/40">
+          <Card className="border-0 shadow-md bg-gradient-to-br from-brand/10 to-brand/5 dark:from-brand/20 dark:to-brand/10">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center">
@@ -351,8 +351,8 @@ export default function PerformanceMonitoring() {
                     <AreaChart data={metrics?.timeSeries || []}>
                       <defs>
                         <linearGradient id="colorQueries" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#ea00ea" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#ea00ea" stopOpacity={0}/>
+                          <stop offset="5%" stopColor="#31509c" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#31509c" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -364,7 +364,7 @@ export default function PerformanceMonitoring() {
                       <Area 
                         type="monotone" 
                         dataKey="queries" 
-                        stroke="#ea00ea" 
+                        stroke="#31509c" 
                         fillOpacity={1} 
                         fill="url(#colorQueries)" 
                         name="Queries"
@@ -405,7 +405,7 @@ export default function PerformanceMonitoring() {
                       <Line 
                         type="monotone" 
                         dataKey="avgSmartLatency" 
-                        stroke="#ea00ea" 
+                        stroke="#31509c" 
                         strokeWidth={2}
                         dot={false}
                         name="Smart Model"
@@ -423,13 +423,13 @@ export default function PerformanceMonitoring() {
                     <p className="text-2xl font-bold text-foreground">{metrics?.avgFastLatency || 0}ms</p>
                     <p className="text-xs text-muted-foreground">Average latency</p>
                   </div>
-                  <div className="p-4 rounded-xl bg-pink-50 dark:bg-pink-950/40 border border-pink-200 dark:border-pink-900">
+                  <div className="p-4 rounded-xl bg-brand/5 dark:bg-brand/10 border border-brand/20 dark:border-brand/20">
                     <div className="flex items-center gap-2 mb-2">
-                      <Brain className="w-4 h-4 text-[#ea00ea]" />
-                      <span className="font-medium text-[#ea00ea]">Smart Model</span>
+                      <Brain className="w-4 h-4 text-brand" />
+                      <span className="font-medium text-brand">Smart Model</span>
                     </div>
-                    <p className="text-2xl font-bold text-[#ea00ea]">{metrics?.avgSmartLatency || 0}ms</p>
-                    <p className="text-xs text-pink-600 dark:text-pink-400">Average latency</p>
+                    <p className="text-2xl font-bold text-brand">{metrics?.avgSmartLatency || 0}ms</p>
+                    <p className="text-xs text-brand/80 dark:text-brand/60">Average latency</p>
                   </div>
                 </div>
               </CardContent>
@@ -487,25 +487,25 @@ export default function PerformanceMonitoring() {
                     <p className="text-xs text-muted-foreground">@ ${MODEL_COSTS.fast_model}/query</p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-pink-50 dark:bg-pink-950/40 border border-pink-200 dark:border-pink-900">
+                  <div className="p-4 rounded-xl bg-brand/5 dark:bg-brand/10 border border-brand/20 dark:border-brand/20">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Brain className="w-4 h-4 text-[#ea00ea]" />
-                        <span className="font-medium text-[#ea00ea]">Smart Model</span>
+                        <Brain className="w-4 h-4 text-brand" />
+                        <span className="font-medium text-brand">Smart Model</span>
                       </div>
-                      <span className="text-sm text-pink-600 dark:text-pink-400">{metrics?.smartQueries || 0} queries</span>
+                      <span className="text-sm text-brand/80 dark:text-brand/60">{metrics?.smartQueries || 0} queries</span>
                     </div>
-                    <p className="text-xl font-bold text-[#ea00ea] mt-2">${metrics?.smartCost?.toFixed(4) || '0.0000'}</p>
-                    <p className="text-xs text-pink-600 dark:text-pink-400">@ ${MODEL_COSTS.smart_model}/query</p>
+                    <p className="text-xl font-bold text-brand mt-2">${metrics?.smartCost?.toFixed(4) || '0.0000'}</p>
+                    <p className="text-xs text-brand/80 dark:text-brand/60">@ ${MODEL_COSTS.smart_model}/query</p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-950 dark:to-purple-950 border border-pink-300 dark:border-pink-800">
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-brand/15 to-brand/10 dark:from-brand/30 dark:to-brand/20 border border-brand/30 dark:border-brand/30">
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-[#ea00ea]">Total Savings with UCP</span>
-                      <CheckCircle className="w-5 h-5 text-[#ea00ea]" />
+                      <span className="font-medium text-brand">Total Savings with UCP</span>
+                      <CheckCircle className="w-5 h-5 text-brand" />
                     </div>
-                    <p className="text-2xl font-bold text-[#ea00ea] mt-2">${metrics?.savings?.toFixed(4) || '0.0000'}</p>
-                    <p className="text-xs text-pink-600 dark:text-pink-400">vs. using Smart Model for all queries</p>
+                    <p className="text-2xl font-bold text-brand mt-2">${metrics?.savings?.toFixed(4) || '0.0000'}</p>
+                    <p className="text-xs text-brand/80 dark:text-brand/60">vs. using Smart Model for all queries</p>
                   </div>
                 </CardContent>
               </Card>
@@ -531,7 +531,7 @@ export default function PerformanceMonitoring() {
                       />
                       <Legend />
                       <Bar dataKey="fastQueries" fill="#c3c3c3" name="Fast Model" stackId="a" />
-                      <Bar dataKey="smartQueries" fill="#ea00ea" name="Smart Model" stackId="a" />
+                      <Bar dataKey="smartQueries" fill="#31509c" name="Smart Model" stackId="a" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

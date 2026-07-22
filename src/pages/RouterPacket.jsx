@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Settings, Save, RotateCcw, AlertCircle, Eye, Pencil, Shield, GitBranch } from 'lucide-react';
+import { Settings, Save, RotateCcw, AlertCircle, Eye, Pencil, GitBranch } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -50,7 +50,7 @@ export default function RouterPacketPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['routerPacket'] });
-      toast.success('Router Packet Updated (Patent Pending) — All future queries now follow this version.');
+      toast.success('Router Packet Updated — All future queries now follow this version.');
     },
     onError: (error) => {
       toast.error(`Failed to save: ${error.message}`);
@@ -128,23 +128,7 @@ export default function RouterPacketPage() {
           </div>
         </div>
 
-        {/* Patent Pending Notice */}
-        <Card className="border-0 shadow-md bg-gradient-to-r from-pink-50/50 to-purple-50/50 dark:from-muted/30 dark:to-muted/20 border-brand/20 mb-6">
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <Shield className="w-5 h-5 text-brand shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-medium text-brand">
-                  This is the UCP Routing Packet (Patent Pending)
-                </p>
-                <p className="text-xs text-brand/80 mt-1">
-                  All routing behavior is derived from this standardized, deterministic configuration file.
-                  UCP Router Packets are portable inference rules — Patent Pending under Application No. 63/928,882.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">

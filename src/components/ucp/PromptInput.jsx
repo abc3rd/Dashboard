@@ -39,36 +39,36 @@ export default function PromptInput({ value, onChange, onSubmit, isLoading, plac
         "flex items-center gap-3 p-3 rounded-xl border-2 transition-all",
         charCount < threshold 
           ? "bg-amber-50 border-amber-200" 
-          : "bg-violet-50 border-violet-200"
+          : "bg-brand/10 border-brand/20"
       )}>
         <div className={cn(
           "w-10 h-10 rounded-lg flex items-center justify-center",
-          charCount < threshold ? "bg-amber-100" : "bg-violet-100"
+          charCount < threshold ? "bg-amber-100" : "bg-brand/15"
         )}>
           {charCount < threshold ? (
             <Zap className="w-5 h-5 text-amber-600" />
           ) : (
-            <Brain className="w-5 h-5 text-violet-600" />
+            <Brain className="w-5 h-5 text-brand" />
           )}
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <span className={cn(
               "font-semibold",
-              charCount < threshold ? "text-amber-700" : "text-violet-700"
+              charCount < threshold ? "text-amber-700" : "text-brand"
             )}>
               {charCount < threshold ? "Fast Model" : "Smart Model"}
             </span>
             <span className={cn(
               "text-sm",
-              charCount < threshold ? "text-amber-600" : "text-violet-600"
+              charCount < threshold ? "text-amber-600" : "text-brand"
             )}>
               ({charCount} characters)
             </span>
           </div>
           <p className={cn(
             "text-xs",
-            charCount < threshold ? "text-amber-600" : "text-violet-600"
+            charCount < threshold ? "text-amber-600" : "text-brand"
           )}>
             {charCount < threshold 
               ? `Prompts under ${threshold} chars route to Fast Model`
@@ -80,8 +80,8 @@ export default function PromptInput({ value, onChange, onSubmit, isLoading, plac
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5 text-xs text-slate-500">
-          <Shield className="w-3 h-3 text-violet-500" />
-          <span>Routing logic derived from UCP Packet (Patent Pending)</span>
+          <Shield className="w-3 h-3 text-brand" />
+          <span>Routing logic derived from UCP Packet</span>
         </div>
 
         <Button

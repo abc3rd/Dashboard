@@ -26,7 +26,7 @@ export default function RoutingBreakdown({ packet }) {
   const getModelColor = (modelId) => {
     return modelId === 'fast_model' 
       ? 'bg-amber-100 text-amber-700 border-amber-200' 
-      : 'bg-violet-100 text-violet-700 border-violet-200';
+      : 'bg-brand/15 text-brand border-brand/20';
   };
 
   const formatCondition = (condition) => {
@@ -49,11 +49,11 @@ export default function RoutingBreakdown({ packet }) {
     <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-2">
-          <Shield className="w-5 h-5 text-violet-600" />
+          <Shield className="w-5 h-5 text-brand" />
           <CardTitle className="text-lg">Live Routing Breakdown</CardTitle>
         </div>
         <CardDescription>
-          Current rules derived from the UCP Packet (Patent Pending)
+          Current rules derived from the UCP Packet
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -123,7 +123,7 @@ export default function RoutingBreakdown({ packet }) {
                 {model.id === 'fast_model' ? (
                   <Zap className="w-4 h-4 text-amber-500" />
                 ) : (
-                  <Brain className="w-4 h-4 text-violet-500" />
+                  <Brain className="w-4 h-4 text-brand" />
                 )}
                 <span className="text-sm font-medium text-card-foreground">{model.id}</span>
                 <span className="text-xs text-muted-foreground ml-auto">

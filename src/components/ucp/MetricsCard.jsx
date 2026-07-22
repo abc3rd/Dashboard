@@ -56,7 +56,7 @@ export default function MetricsCard() {
       value: `${smartPercent}%`,
       subValue: `${smartCount} queries`,
       icon: Brain,
-      color: 'text-violet-600'
+      color: 'text-brand'
     },
     {
       label: 'Avg Latency (Fast)',
@@ -68,7 +68,7 @@ export default function MetricsCard() {
       label: 'Avg Latency (Smart)',
       value: `${avgSmartLatency}ms`,
       icon: Clock,
-      color: 'text-violet-600'
+      color: 'text-brand'
     }
   ];
 
@@ -76,8 +76,8 @@ export default function MetricsCard() {
     <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-2">
-          <Shield className="w-5 h-5 text-violet-600" />
-          <CardTitle className="text-lg">UCP Routing Metrics (Patent Pending)</CardTitle>
+          <Shield className="w-5 h-5 text-brand" />
+          <CardTitle className="text-lg">UCP Routing Metrics</CardTitle>
         </div>
         <CardDescription>
           Real-time analytics from deterministic UCP routing

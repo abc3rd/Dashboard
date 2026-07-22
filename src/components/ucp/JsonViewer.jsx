@@ -15,7 +15,7 @@ export default function JsonViewer({ data, className }) {
     }
     
     if (typeof obj === 'boolean') {
-      return <span className="text-violet-600">{obj.toString()}</span>;
+      return <span className="text-brand">{obj.toString()}</span>;
     }
     
     if (Array.isArray(obj)) {

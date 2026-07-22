@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, Shield, Crown } from 'lucide-react';
+import { Sparkles, Crown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PromptInput from '@/components/ucp/PromptInput';
@@ -66,12 +66,8 @@ export default function Home() {
           <h1 className="text-4xl font-bold text-foreground mb-3">
             UCP AI Router
           </h1>
-          <div className="flex items-center justify-center gap-2 text-brand mb-3">
-            <Shield className="w-4 h-4" />
-            <span className="text-sm font-medium">Patent Pending</span>
-          </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Ask any question and watch the Universal Command Protocol (UCP) — Patent Pending — 
+            Ask any question and watch the Universal Command Protocol (UCP) 
             route it to the optimal AI model using deterministic rules. 
             <span className="font-medium text-foreground"> Interpret once. Execute infinitely.</span>
           </p>

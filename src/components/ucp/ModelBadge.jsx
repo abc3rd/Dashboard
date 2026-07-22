@@ -24,13 +24,13 @@ export default function ModelBadge({ modelId, size = 'default' }) {
         sizeClasses[size],
         isFast
           ? 'bg-amber-50 text-amber-700 border border-amber-200'
-          : 'bg-violet-50 text-violet-700 border border-violet-200'
+          : 'bg-brand/10 text-brand border border-brand/20'
       )}
     >
       {isFast ? (
         <Zap className={cn(iconSizes[size], 'text-amber-500')} />
       ) : (
-        <Brain className={cn(iconSizes[size], 'text-violet-500')} />
+        <Brain className={cn(iconSizes[size], 'text-brand')} />
       )}
       <span>{isFast ? 'Fast Model' : 'Smart Model'}</span>
     </div>
