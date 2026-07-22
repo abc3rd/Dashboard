@@ -1,7 +1,7 @@
 import React from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Info, Shield, Zap, GitBranch, Server, FileJson } from 'lucide-react';
+import { Info, Zap, GitBranch, Server, FileJson } from 'lucide-react';
 
 export default function AboutUcpDrawer() {
   const features = [
@@ -37,10 +37,6 @@ export default function AboutUcpDrawer() {
       </SheetTrigger>
       <SheetContent className="w-full sm:max-w-md overflow-y-auto">
         <SheetHeader className="text-left pb-6">
-          <div className="flex items-center gap-2 text-violet-600 mb-2">
-            <Shield className="w-5 h-5" />
-            <span className="text-xs font-semibold uppercase tracking-wider">Patent Pending</span>
-          </div>
           <SheetTitle className="text-2xl">Universal Command Protocol (UCP)</SheetTitle>
         </SheetHeader>
 
@@ -78,14 +74,6 @@ export default function AboutUcpDrawer() {
             </p>
           </div>
 
-          {/* Patent Info */}
-          <div className="pt-4 border-t border-slate-200">
-            <div className="flex items-center gap-2 text-slate-500 text-sm">
-              <Shield className="w-4 h-4" />
-              <span>Application No. 63/928,882</span>
-            </div>
-            <p className="text-sm text-slate-500 mt-1">Omega UI, LLC</p>
-          </div>
         </div>
       </SheetContent>
     </Sheet>

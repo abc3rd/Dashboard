@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { createPageUrl } from './utils';
-import { Sparkles, Settings, MessageSquare, Book, Shield, Activity, ChevronLeft, Crown } from 'lucide-react';
+import { Sparkles, Settings, MessageSquare, Book, Activity, ChevronLeft, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
 import AboutUcpDrawer from '@/components/ucp/AboutUcpDrawer';
@@ -70,10 +70,6 @@ export default function Layout({ children, currentPageName }) {
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
               <span className="font-semibold text-lg hidden sm:block">UCP Router</span>
-              <span className="hidden md:flex items-center gap-1 text-xs text-brand bg-brand/10 px-2 py-0.5 rounded-full">
-                <Shield className="w-3 h-3" />
-                Patent Pending
-              </span>
             </Link>
 
             <div className="flex items-center gap-1">
@@ -184,8 +180,7 @@ export default function Layout({ children, currentPageName }) {
             </Link>
           </div>
           <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <Shield className="w-4 h-4 text-brand" />
-            <span>Powered by UCP — Patent Pending (Application No. 63/928,882) — Omega UI, LLC</span>
+            <span>Powered by UCP — Omega UI, LLC</span>
           </div>
         </div>
       </footer>

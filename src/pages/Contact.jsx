@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, MessageSquare, Send, Clock } from 'lucide-react';
+import { Mail, Send, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -85,22 +85,6 @@ export default function Contact() {
               </CardContent>
             </Card>
 
-            <Card className="border border-border bg-card/80 backdrop-blur-sm">
-              <CardContent className="p-5">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-brand/10 flex items-center justify-center shrink-0">
-                    <MessageSquare className="w-5 h-5 text-brand" />
-                  </div>
-                  <div>
-                    <h2 className="font-semibold text-foreground mb-1">Patent Inquiries</h2>
-                    <p className="text-sm text-muted-foreground">
-                      For licensing or questions regarding the UCP patent (Application No. 63/928,882),
-                      please email us with "Patent" in the subject line.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
 
           {/* Contact form */}

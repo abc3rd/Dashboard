@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Zap, Brain, Target, Users, Building2 } from 'lucide-react';
+import { Zap, Brain, Target, Users, Building2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function About() {
@@ -19,16 +19,12 @@ export default function About() {
             <Building2 className="w-7 h-7 text-white" />
           </div>
           <h1 className="text-4xl font-bold text-foreground mb-4">About UCP Router</h1>
-          <div className="flex items-center gap-2 text-brand mb-6">
-            <Shield className="w-4 h-4" />
-            <span className="text-sm font-medium">Patent Pending — Application No. 63/928,882</span>
-          </div>
         </div>
 
         {/* Main content - 150+ words */}
         <div className="prose prose-lg max-w-none space-y-6 mb-10">
           <p className="text-lg text-muted-foreground leading-relaxed">
-            <strong className="text-foreground">UCP Router</strong> is a patent-pending AI routing platform built by
+            <strong className="text-foreground">UCP Router</strong> is an AI routing platform built by
             Omega UI, LLC. It uses the <strong className="text-foreground">Universal Command Protocol (UCP)</strong> to
             intelligently route user prompts to the most suitable AI model based on configurable, deterministic
             selection rules. Rather than relying on a single model for every query, UCP Router evaluates prompt
@@ -48,9 +44,8 @@ export default function About() {
 
           <p className="text-lg text-muted-foreground leading-relaxed">
             UCP Router is developed and maintained by <strong className="text-foreground">Omega UI, LLC</strong>.
-            The Universal Command Protocol is currently Patent Pending under Application No. 63/928,882. The project
-            aims to make AI model routing transparent, portable, and deterministic—interpreting each prompt once and
-            executing it infinitely across the optimal model.
+            The project aims to make AI model routing transparent, portable, and deterministic—interpreting each
+            prompt once and executing it infinitely across the optimal model.
           </p>
         </div>
 
@@ -73,22 +68,6 @@ export default function About() {
           ))}
         </div>
 
-        {/* Patent notice */}
-        <Card className="border border-brand/20 bg-gradient-to-r from-pink-50/50 to-purple-50/50 dark:from-muted/30 dark:to-muted/20">
-          <CardContent className="p-5">
-            <div className="flex items-start gap-3">
-              <Shield className="w-5 h-5 text-brand shrink-0 mt-0.5" />
-              <div>
-                <h2 className="text-sm font-semibold text-brand mb-1">Patent Pending Technology</h2>
-                <p className="text-xs text-brand/80">
-                  The Universal Command Protocol and UCP Router Packet are patent-pending innovations under
-                  Application No. 63/928,882, developed by Omega UI, LLC. All routing behavior is derived from
-                  a standardized, deterministic configuration file.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
