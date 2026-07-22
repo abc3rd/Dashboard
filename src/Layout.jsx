@@ -13,7 +13,9 @@ const PAGE_TITLES = {
   RouterPacket: 'Router Packet',
   UcpApiDocs: 'API Docs',
   Pricing: 'Pricing',
-  ThankYou: 'Thank You'
+  ThankYou: 'Thank You',
+  PrivacyPolicy: 'Privacy Policy',
+  Terms: 'Terms'
 };
 
 export default function Layout({ children, currentPageName }) {
@@ -177,6 +179,14 @@ export default function Layout({ children, currentPageName }) {
             <span className="text-border">•</span>
             <Link to={createPageUrl('Contact')} className="text-muted-foreground hover:text-brand transition-colors">
               Contact
+            </Link>
+            <span className="text-border">•</span>
+            <Link to={createPageUrl('PrivacyPolicy')} className="text-muted-foreground hover:text-brand transition-colors">
+              Privacy Policy
+            </Link>
+            <span className="text-border">•</span>
+            <Link to={createPageUrl('Terms')} className="text-muted-foreground hover:text-brand transition-colors">
+              Terms
             </Link>
           </div>
           <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">

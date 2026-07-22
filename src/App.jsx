@@ -11,6 +11,8 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Pricing from './pages/Pricing';
 import ThankYou from './pages/ThankYou';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Terms from './pages/Terms';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -67,6 +69,12 @@ const AuthenticatedApp = () => {
       } />
       <Route path="/ThankYou" element={
         <LayoutWrapper currentPageName="ThankYou"><ThankYou /></LayoutWrapper>
+      } />
+      <Route path="/PrivacyPolicy" element={
+        <LayoutWrapper currentPageName="PrivacyPolicy"><PrivacyPolicy /></LayoutWrapper>
+      } />
+      <Route path="/Terms" element={
+        <LayoutWrapper currentPageName="Terms"><Terms /></LayoutWrapper>
       } />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
