@@ -274,34 +274,43 @@ Deno.serve(async (req) => {
         }, { status: 400 });
       }
 
-      // Enforce authentication strictly — anonymous queries are not allowed
-      let currentUser;
+      // Resolve identity: logged-in users are rate-limited per account; anonymous
+      // visitors are rate-limited per client-generated session id (fallback to IP).
+      let currentUser = null;
       try {
         currentUser = await base44.auth.me();
       } catch (e) {
         currentUser = null;
       }
-      if (!currentUser || !currentUser.email) {
-        return Response.json({
-          success: false,
-          error: 'unauthorized',
-          message: 'You must be logged in to use the UCP AI Router.'
-        }, { status: 401 });
-      }
+      const isLoggedIn = !!(currentUser && currentUser.email);
 
-      // Freemium tier enforcement: free users capped at FREE_DAILY_LIMIT queries/day
-      const tier = await getUserTier(base44, currentUser.email);
+      // Pro tier (unlimited) only applies to logged-in users; anonymous = free.
+      const tier = isLoggedIn ? await getUserTier(base44, currentUser.email) : 'free';
+
       if (tier !== 'pro') {
         const startOfDay = new Date();
         startOfDay.setHours(0, 0, 0, 0);
         let todayCount = 0;
         try {
-          const todayLogs = await base44.entities.QueryLog.filter(
-            { created_by_id: currentUser.id, created_date: { $gte: startOfDay.toISOString() } },
-            '-created_date',
-            200
-          );
-          todayCount = todayLogs.length;
+          if (isLoggedIn) {
+            const todayLogs = await base44.entities.QueryLog.filter(
+              { created_by_id: currentUser.id, created_date: { $gte: startOfDay.toISOString() } },
+              '-created_date',
+              200
+            );
+            todayCount = todayLogs.length;
+          } else {
+            // Anonymous: rate-limit by session id, falling back to request IP.
+            const clientIp = (req.headers.get("x-forwarded-for") || "")
+              .split(",")[0].trim() || req.headers.get("x-real-ip") || "anonymous";
+            const rateKey = body.session_id || clientIp;
+            const todayLogs = await base44.asServiceRole.entities.QueryLog.filter(
+              { session_id: rateKey, created_date: { $gte: startOfDay.toISOString() } },
+              '-created_date',
+              200
+            );
+            todayCount = todayLogs.length;
+          }
         } catch (e) {
           todayCount = 0;
         }
@@ -359,13 +368,21 @@ Deno.serve(async (req) => {
         
         // Save to query log
         try {
-          await base44.entities.QueryLog.create({
+          const logEntry = {
             prompt,
             answer: qaResponse.outputs.answer,
             chosen_model: qaResponse.meta.model_id,
             confidence: qaResponse.outputs.confidence,
             latency_ms: totalLatency
-          });
+          };
+          if (isLoggedIn) {
+            await base44.entities.QueryLog.create(logEntry);
+          } else {
+            const clientIp = (req.headers.get("x-forwarded-for") || "")
+              .split(",")[0].trim() || req.headers.get("x-real-ip") || "anonymous";
+            logEntry.session_id = body.session_id || clientIp;
+            await base44.asServiceRole.entities.QueryLog.create(logEntry);
+          }
         } catch (e) {
           // Log error but don't fail the request
           console.error('Failed to save query log:', e);

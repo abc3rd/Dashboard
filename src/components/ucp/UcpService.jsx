@@ -33,10 +33,11 @@ export const UcpRouterService = {
    * @param {string} prompt - The user's question
    * @returns {Promise<AskResponse>}
    */
-  async ask(prompt) {
+  async ask(prompt, sessionId) {
     const response = await base44.functions.invoke('ucpRouter', { 
       action: 'ask', 
-      prompt 
+      prompt,
+      session_id: sessionId || undefined
     });
     return response.data;
   },

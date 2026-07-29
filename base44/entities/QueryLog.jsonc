@@ -21,6 +21,10 @@
     "latency_ms": {
       "type": "number",
       "description": "Response time in milliseconds"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Anonymous client session identifier used for free-tier rate limiting when no user is logged in"
     }
   },
   "required": [
