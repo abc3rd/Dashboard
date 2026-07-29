@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Check, Sparkles, Zap, Crown, Loader2, Shield } from 'lucide-react';
 import { toast } from 'sonner';
+import { isAndroidTWA } from '@/lib/platform';
+import AndroidUpgradeNotice from '@/components/ucp/AndroidUpgradeNotice';
 
 const PRO_PLANS = [
   {
@@ -53,6 +55,7 @@ export default function Pricing() {
   const todayCount = useDailyQueryCount();
   const [loadingPlan, setLoadingPlan] = useState(null);
   const isPro = tier === 'pro';
+  const [androidTWA] = useState(() => isAndroidTWA());
 
   const handleUpgrade = async (planId) => {
     if (loadingPlan) return;
@@ -159,7 +162,10 @@ export default function Pricing() {
           </Card>
         </div>
 
-        {/* Purchase options */}
+        {/* Purchase options — hidden inside the Android TWA (Play policy: no non-Play-Billing digital purchase in-app) */}
+        {androidTWA ? (
+          <AndroidUpgradeNotice />
+        ) : (
         <div className="mb-6">
           <h2 className="text-center text-lg font-semibold text-foreground mb-1">
             Choose your Omega Access plan
@@ -213,6 +219,7 @@ export default function Pricing() {
             ))}
           </div>
         </div>
+        )}
 
         {/* Trust line */}
         <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">

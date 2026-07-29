@@ -1,20 +1,19 @@
 {
   "name": "UCP AI Router",
-  "short_name": "UCP",
-  "description": "Smart AI model routing with the Universal Command Protocol.",
+  "short_name": "UCP Router",
+  "description": "Intelligent AI model routing with deterministic selection, data governance, and performance monitoring.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#31509c",
-  "categories": ["productivity", "utilities"],
+  "orientation": "any",
   "icons": [
     {
       "src": "/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
