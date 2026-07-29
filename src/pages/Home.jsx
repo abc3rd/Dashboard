@@ -28,25 +28,14 @@ export default function Home() {
   // Ask mutation - uses backend service
   const askMutation = useMutation({
     mutationFn: async (promptText) => {
-      try {
-        // Call the UCP Router backend service
-        const response = await UcpRouterService.ask(promptText, sessionId);
-
-        if (!response.success) {
-          const err = new Error(response.message || response.error || 'Failed to get response');
-          err.code = response.error;
-          throw err;
-        }
-
-        return response;
-      } catch (e) {
-        // Normalize SDK/Base44 errors to the backend's message + code so users see
-        // "You've reached the free limit..." instead of a raw status-code string.
-        const body = e?.data || {};
-        const err = new Error(body.message || e?.message || 'Failed to get response');
-        err.code = body.error || e?.code;
+      // UcpRouterService.ask normalizes backend errors (message + code) on failure.
+      const response = await UcpRouterService.ask(promptText, sessionId);
+      if (!response.success) {
+        const err = new Error(response.message || response.error || 'Failed to get response');
+        err.code = response.error;
         throw err;
       }
+      return response;
     },
     onSuccess: (data) => {
       setResult(data);

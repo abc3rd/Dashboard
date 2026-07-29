@@ -80,95 +80,44 @@ function chooseModelForPrompt(packet, prompt) {
 }
 
 // ============================================
-// MODEL ADAPTERS (Simulated)
+// MODEL ADAPTERS (InvokeLLM)
 // ============================================
 
-async function fastModelAdapter(prompt) {
-  const latencyMs = 150 + Math.floor(Math.random() * 150);
-  
-  // Simulate processing delay
-  await new Promise(resolve => setTimeout(resolve, latencyMs));
-  
-  const responses = [
-    `FAST MODEL: Quick answer for "${prompt.slice(0, 30)}${prompt.length > 30 ? '...' : ''}". The key point is to focus on the essentials.`,
-    `FAST MODEL: Brief response - This is a straightforward query. Main consideration: efficiency and practical application.`,
-    `FAST MODEL: In short - Your question touches on an interesting topic. The direct answer depends on context.`
-  ];
-  
-  const answer = responses[Math.floor(Math.random() * responses.length)];
-  const confidence = 0.6 + Math.random() * 0.2;
-
+async function fastModelAdapter(base44, prompt) {
+  const start = Date.now();
+  const instruction =
+    "You are the Fast model of the UCP AI Router. Answer the following question concisely in 1 to 3 sentences. " +
+    "Do not include any preamble, greeting, or filler — just the direct answer.\n\nQuestion: " + prompt;
+  const result = await base44.integrations.Core.InvokeLLM({ prompt: instruction });
+  const latencyMs = Date.now() - start;
+  const answer = typeof result === "string" ? result : (result?.output || result?.text || JSON.stringify(result));
   return {
     ucp_version: "1.0",
     command_type: "qa",
-    outputs: {
-      answer,
-      confidence: Math.round(confidence * 100) / 100
-    },
-    meta: {
-      model_id: "fast_model",
-      latency_ms: latencyMs
-    }
+    outputs: { answer, confidence: 0.75 },
+    meta: { model_id: "fast_model", latency_ms: latencyMs }
   };
 }
 
-async function smartModelAdapter(prompt) {
-  const latencyMs = 400 + Math.floor(Math.random() * 400);
-  
-  // Simulate processing delay
-  await new Promise(resolve => setTimeout(resolve, latencyMs));
-  
-  const responses = [
-    `SMART MODEL: Comprehensive analysis of "${prompt.slice(0, 40)}${prompt.length > 40 ? '...' : ''}"
-
-**Key Components:**
-1. **Context**: Understanding the broader implications is essential.
-2. **Analysis**: Multiple perspectives worth considering here.
-3. **Conclusion**: The optimal approach depends on your specific goals.
-
-I recommend considering both short-term efficiency and long-term sustainability.`,
-    
-    `SMART MODEL: Detailed response to your query.
-
-**Background**: Your question connects to several important concepts.
-
-**Key Insights**:
-- First, consider the foundational principles at play.
-- Second, practical implementation requires careful planning.
-- Third, measuring outcomes will be crucial for success.
-
-**Recommendation**: A balanced approach considering multiple stakeholders yields the best results.`,
-    
-    `SMART MODEL: In-depth analysis provided.
-
-**Overview**: This topic involves multiple interconnected factors.
-
-**Detailed Analysis**:
-The primary consideration is understanding core requirements. From there, we can map potential solutions and evaluate trade-offs.
-
-**Strategic Guidance**: Start with clear success criteria, then iteratively refine based on feedback.`
-  ];
-  
-  const answer = responses[Math.floor(Math.random() * responses.length)];
-  const confidence = 0.8 + Math.random() * 0.15;
-
+async function smartModelAdapter(base44, prompt) {
+  const start = Date.now();
+  const instruction =
+    "You are the Smart model of the UCP AI Router. Provide a thorough, well-structured answer to the following question. " +
+    "Include relevant context, clear reasoning, and a concise conclusion.\n\nQuestion: " + prompt;
+  const result = await base44.integrations.Core.InvokeLLM({ prompt: instruction });
+  const latencyMs = Date.now() - start;
+  const answer = typeof result === "string" ? result : (result?.output || result?.text || JSON.stringify(result));
   return {
     ucp_version: "1.0",
     command_type: "qa",
-    outputs: {
-      answer,
-      confidence: Math.round(confidence * 100) / 100
-    },
-    meta: {
-      model_id: "smart_model",
-      latency_ms: latencyMs
-    }
+    outputs: { answer, confidence: 0.9 },
+    meta: { model_id: "smart_model", latency_ms: latencyMs }
   };
 }
 
-async function callModelAdapter(modelId, prompt) {
-  if (modelId === "fast_model") return fastModelAdapter(prompt);
-  if (modelId === "smart_model") return smartModelAdapter(prompt);
+async function callModelAdapter(base44, modelId, prompt) {
+  if (modelId === "fast_model") return fastModelAdapter(base44, prompt);
+  if (modelId === "smart_model") return smartModelAdapter(base44, prompt);
   throw new Error(`Unknown modelId: ${modelId}`);
 }
 
@@ -300,12 +249,12 @@ Deno.serve(async (req) => {
             );
             todayCount = todayLogs.length;
           } else {
-            // Anonymous: rate-limit strictly by the server-observed client IP.
-            // Never trust a client-supplied session_id for the rate-limit decision.
+            // Anonymous: rate-limit by client session id, falling back to request IP.
             const clientIp = (req.headers.get("x-forwarded-for") || "")
               .split(",")[0].trim() || req.headers.get("x-real-ip") || "anonymous";
+            const rateKey = body.session_id || clientIp;
             const todayLogs = await base44.asServiceRole.entities.QueryLog.filter(
-              { session_id: clientIp, created_date: { $gte: startOfDay.toISOString() } },
+              { session_id: rateKey, created_date: { $gte: startOfDay.toISOString() } },
               '-created_date',
               200
             );
@@ -350,7 +299,7 @@ Deno.serve(async (req) => {
         };
         
         // Call the appropriate adapter
-        const qaResponse = await callModelAdapter(chosenModel, prompt);
+        const qaResponse = await callModelAdapter(base44, chosenModel, prompt);
         
         const totalLatency = Date.now() - startTime;
         
@@ -378,10 +327,9 @@ Deno.serve(async (req) => {
           if (isLoggedIn) {
             await base44.entities.QueryLog.create(logEntry);
           } else {
-            // Store the server-derived IP key so stored logs match rate-limit counts.
             const clientIp = (req.headers.get("x-forwarded-for") || "")
               .split(",")[0].trim() || req.headers.get("x-real-ip") || "anonymous";
-            logEntry.session_id = clientIp;
+            logEntry.session_id = body.session_id || clientIp;
             await base44.asServiceRole.entities.QueryLog.create(logEntry);
           }
         } catch (e) {

@@ -3,6 +3,13 @@ import { useState, useEffect } from 'react';
 const SESSION_KEY = 'ucp_session_id';
 
 function generateId() {
+  try {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+  } catch (e) {
+    /* fall through to legacy generator */
+  }
   return 'sess_' + Math.random().toString(36).slice(2, 12) + Date.now().toString(36);
 }
 

@@ -34,12 +34,22 @@ export const UcpRouterService = {
    * @returns {Promise<AskResponse>}
    */
   async ask(prompt, sessionId) {
-    const response = await base44.functions.invoke('ucpRouter', { 
-      action: 'ask', 
-      prompt,
-      session_id: sessionId || undefined
-    });
-    return response.data;
+    try {
+      const response = await base44.functions.invoke('ucpRouter', {
+        action: 'ask',
+        prompt,
+        session_id: sessionId || undefined
+      });
+      return response.data;
+    } catch (error) {
+      // base44.functions.invoke throws on non-2xx. Normalize the backend's
+      // message + error code so callers can branch on error.code (e.g. the
+      // "Upgrade to Omega Access" button checks code === 'free_limit_reached').
+      const data = error?.data || {};
+      const err = new Error(data.message || data.error || error?.message || 'Failed to get response');
+      err.code = data.error;
+      throw err;
+    }
   },
 
   /**
