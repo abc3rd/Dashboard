@@ -8,6 +8,7 @@ import { Check, Sparkles, Zap, Crown, Loader2, Shield } from 'lucide-react';
 import { toast } from 'sonner';
 import { isAndroidTWA } from '@/lib/platform';
 import AndroidUpgradeNotice from '@/components/ucp/AndroidUpgradeNotice';
+import DeleteAccountDialog from '@/components/ucp/DeleteAccountDialog';
 
 const PRO_PLANS = [
   {
@@ -225,6 +226,11 @@ export default function Pricing() {
         <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
           <Shield className="w-4 h-4 text-brand" />
           <span>Zero-knowledge routing stays active on every tier. Cancel anytime.</span>
+        </div>
+
+        {/* Account deletion */}
+        <div className="max-w-xl mx-auto">
+          <DeleteAccountDialog />
         </div>
 
         <div className="text-center mt-8">
