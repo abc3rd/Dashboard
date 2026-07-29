@@ -300,12 +300,12 @@ Deno.serve(async (req) => {
             );
             todayCount = todayLogs.length;
           } else {
-            // Anonymous: rate-limit by session id, falling back to request IP.
+            // Anonymous: rate-limit strictly by the server-observed client IP.
+            // Never trust a client-supplied session_id for the rate-limit decision.
             const clientIp = (req.headers.get("x-forwarded-for") || "")
               .split(",")[0].trim() || req.headers.get("x-real-ip") || "anonymous";
-            const rateKey = body.session_id || clientIp;
             const todayLogs = await base44.asServiceRole.entities.QueryLog.filter(
-              { session_id: rateKey, created_date: { $gte: startOfDay.toISOString() } },
+              { session_id: clientIp, created_date: { $gte: startOfDay.toISOString() } },
               '-created_date',
               200
             );
@@ -378,9 +378,10 @@ Deno.serve(async (req) => {
           if (isLoggedIn) {
             await base44.entities.QueryLog.create(logEntry);
           } else {
+            // Store the server-derived IP key so stored logs match rate-limit counts.
             const clientIp = (req.headers.get("x-forwarded-for") || "")
               .split(",")[0].trim() || req.headers.get("x-real-ip") || "anonymous";
-            logEntry.session_id = body.session_id || clientIp;
+            logEntry.session_id = clientIp;
             await base44.asServiceRole.entities.QueryLog.create(logEntry);
           }
         } catch (e) {
