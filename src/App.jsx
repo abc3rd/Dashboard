@@ -13,6 +13,7 @@ import Pricing from './pages/Pricing';
 import ThankYou from './pages/ThankYou';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Terms from './pages/Terms';
+import WhitePaper from './pages/WhitePaper';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -75,6 +76,9 @@ const AuthenticatedApp = () => {
       } />
       <Route path="/Terms" element={
         <LayoutWrapper currentPageName="Terms"><Terms /></LayoutWrapper>
+      } />
+      <Route path="/WhitePaper" element={
+        <LayoutWrapper currentPageName="WhitePaper"><WhitePaper /></LayoutWrapper>
       } />
       <Route path="*" element={<PageNotFound />} />
     </Routes>

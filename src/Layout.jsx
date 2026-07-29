@@ -15,7 +15,8 @@ const PAGE_TITLES = {
   Pricing: 'Pricing',
   ThankYou: 'Thank You',
   PrivacyPolicy: 'Privacy Policy',
-  Terms: 'Terms'
+  Terms: 'Terms',
+  WhitePaper: 'White Paper'
 };
 
 // Root bottom-tab screens that show the brand logo instead of a back button.
@@ -190,6 +191,10 @@ export default function Layout({ children, currentPageName }) {
             <span className="text-border">•</span>
             <Link to={createPageUrl('Terms')} className="text-muted-foreground hover:text-brand transition-colors">
               Terms
+            </Link>
+            <span className="text-border">•</span>
+            <Link to={createPageUrl('WhitePaper')} className="text-muted-foreground hover:text-brand transition-colors">
+              White Paper
             </Link>
           </div>
           <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
