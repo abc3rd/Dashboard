@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { isAndroidTWA } from '@/lib/platform';
 import AndroidUpgradeNotice from '@/components/ucp/AndroidUpgradeNotice';
 import DeleteAccountDialog from '@/components/ucp/DeleteAccountDialog';
+import { useAuth } from '@/lib/AuthContext';
 
 const PRO_PLANS = [
   {
@@ -53,6 +54,7 @@ const PRO_FEATURES = [
 
 export default function Pricing() {
   const { tier, plan } = useSubscription();
+  const { isAuthenticated, navigateToLogin } = useAuth();
   const todayCount = useDailyQueryCount();
   const [loadingPlan, setLoadingPlan] = useState(null);
   const isPro = tier === 'pro';
@@ -60,6 +62,12 @@ export default function Pricing() {
 
   const handleUpgrade = async (planId) => {
     if (loadingPlan) return;
+    // Omega Access is tied to an account, so the upgrade flow begins with sign-in
+    // rather than failing with an error the user can't act on.
+    if (!isAuthenticated) {
+      navigateToLogin();
+      return;
+    }
     setLoadingPlan(planId);
     try {
       const res = await base44.functions.invoke('create-checkout', { plan: planId });
@@ -74,6 +82,10 @@ export default function Pricing() {
         toast.error('No checkout URL returned.');
       }
     } catch (e) {
+      if (e?.response?.status === 401) {
+        navigateToLogin();
+        return;
+      }
       const msg = e?.response?.data?.error || e?.message || 'Failed to start checkout.';
       toast.error(msg);
     } finally {
@@ -228,10 +240,12 @@ export default function Pricing() {
           <span>Zero-knowledge routing stays active on every tier. Cancel anytime.</span>
         </div>
 
-        {/* Account deletion */}
-        <div className="max-w-xl mx-auto">
-          <DeleteAccountDialog />
-        </div>
+        {/* Account deletion — only relevant for signed-in users */}
+        {isAuthenticated && (
+          <div className="max-w-xl mx-auto">
+            <DeleteAccountDialog />
+          </div>
+        )}
 
         <div className="text-center mt-8">
           <Link to="/" className="text-sm text-brand hover:underline">
