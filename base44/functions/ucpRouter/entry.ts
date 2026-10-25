@@ -88,7 +88,7 @@ async function fastModelAdapter(base44, prompt) {
   const instruction =
     "You are the Fast model of the UCP AI Router. Answer the following question concisely in 1 to 3 sentences. " +
     "Do not include any preamble, greeting, or filler — just the direct answer.\n\nQuestion: " + prompt;
-  const result = await base44.integrations.Core.InvokeLLM({ prompt: instruction });
+  const result = await base44.asServiceRole.integrations.Core.InvokeLLM({ prompt: instruction });
   const latencyMs = Date.now() - start;
   const answer = typeof result === "string" ? result : (result?.output || result?.text || JSON.stringify(result));
   return {
@@ -104,7 +104,7 @@ async function smartModelAdapter(base44, prompt) {
   const instruction =
     "You are the Smart model of the UCP AI Router. Provide a thorough, well-structured answer to the following question. " +
     "Include relevant context, clear reasoning, and a concise conclusion.\n\nQuestion: " + prompt;
-  const result = await base44.integrations.Core.InvokeLLM({ prompt: instruction });
+  const result = await base44.asServiceRole.integrations.Core.InvokeLLM({ prompt: instruction });
   const latencyMs = Date.now() - start;
   const answer = typeof result === "string" ? result : (result?.output || result?.text || JSON.stringify(result));
   return {
@@ -119,6 +119,28 @@ async function callModelAdapter(base44, modelId, prompt) {
   if (modelId === "fast_model") return fastModelAdapter(base44, prompt);
   if (modelId === "smart_model") return smartModelAdapter(base44, prompt);
   throw new Error(`Unknown modelId: ${modelId}`);
+}
+
+// ============================================
+// ANONYMOUS CALLER IDENTITY
+// ============================================
+// Anonymous quota accounting must never rely on a client-supplied identifier:
+// rotating a session_id in the request body would grant unlimited free queries.
+// The quota is keyed on the IP address the platform's edge observed instead.
+function getTrustedClientIp(req) {
+  // Single-valued headers written by the edge itself are preferred.
+  const edgeIp = req.headers.get("cf-connecting-ip") || req.headers.get("x-real-ip");
+  if (edgeIp && edgeIp.trim()) return edgeIp.trim();
+
+  // x-forwarded-for is a comma-separated chain a caller can prepend to, so only
+  // the right-most hop (added by the platform's own proxy) can be trusted.
+  const chain = (req.headers.get("x-forwarded-for") || "")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+  if (chain.length > 0) return chain[chain.length - 1];
+
+  return "unknown";
 }
 
 // ============================================
@@ -233,6 +255,9 @@ Deno.serve(async (req) => {
       }
       const isLoggedIn = !!(currentUser && currentUser.email);
 
+      // Server-observed identity for anonymous quota accounting (never client input).
+      const anonymousRateKey = `ip:${getTrustedClientIp(req)}`;
+
       // Pro tier (unlimited) only applies to logged-in users; anonymous = free.
       const tier = isLoggedIn ? await getUserTier(base44, currentUser.email) : 'free';
 
@@ -249,19 +274,23 @@ Deno.serve(async (req) => {
             );
             todayCount = todayLogs.length;
           } else {
-            // Anonymous: rate-limit by client session id, falling back to request IP.
-            const clientIp = (req.headers.get("x-forwarded-for") || "")
-              .split(",")[0].trim() || req.headers.get("x-real-ip") || "anonymous";
-            const rateKey = body.session_id || clientIp;
+            // Anonymous: rate-limited by the server-observed client IP only.
             const todayLogs = await base44.asServiceRole.entities.QueryLog.filter(
-              { session_id: rateKey, created_date: { $gte: startOfDay.toISOString() } },
+              { session_id: anonymousRateKey, created_date: { $gte: startOfDay.toISOString() } },
               '-created_date',
               200
             );
             todayCount = todayLogs.length;
           }
         } catch (e) {
-          todayCount = 0;
+          // Fail closed: when usage can't be verified we must not hand out a model
+          // call, otherwise a failing check turns into an unlimited free pass.
+          console.error('ucpRouter: quota check failed', e?.message || e);
+          return Response.json({
+            success: false,
+            error: 'quota_check_failed',
+            message: 'Could not verify your daily usage. Please try again in a moment.'
+          }, { status: 503 });
         }
 
         if (todayCount >= FREE_DAILY_LIMIT) {
@@ -327,9 +356,7 @@ Deno.serve(async (req) => {
           if (isLoggedIn) {
             await base44.entities.QueryLog.create(logEntry);
           } else {
-            const clientIp = (req.headers.get("x-forwarded-for") || "")
-              .split(",")[0].trim() || req.headers.get("x-real-ip") || "anonymous";
-            logEntry.session_id = body.session_id || clientIp;
+            logEntry.session_id = anonymousRateKey;
             await base44.asServiceRole.entities.QueryLog.create(logEntry);
           }
         } catch (e) {
