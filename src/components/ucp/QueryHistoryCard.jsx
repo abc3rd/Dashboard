@@ -19,6 +19,7 @@ export default function QueryHistoryCard({ query }) {
         type="button"
         onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
+        aria-label={expanded ? 'Hide query details' : 'Show query details'}
         className="w-full text-left px-4 pt-3 pb-2 min-h-[44px] hover:bg-slate-50 transition-colors"
       >
         <span className="flex items-center justify-between gap-2 mb-2">

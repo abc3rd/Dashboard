@@ -89,11 +89,11 @@ export default function Layout({ children, currentPageName }) {
     if (target !== current) navigate(target);
   };
   const navItems = [
-    { name: 'Home', icon: MessageSquare, label: 'Ask' },
-    { name: 'PerformanceMonitoring', icon: Activity, label: 'Monitoring' },
-    { name: 'RouterPacket', icon: Settings, label: 'Packet' },
-    { name: 'Pricing', icon: Crown, label: 'Pricing' },
-    { name: 'UcpApiDocs', icon: Book, label: 'Docs' }
+    { name: 'Home', icon: MessageSquare, label: 'Ask', ariaLabel: 'Ask a question' },
+    { name: 'PerformanceMonitoring', icon: Activity, label: 'Monitoring', ariaLabel: 'Monitoring dashboard' },
+    { name: 'RouterPacket', icon: Settings, label: 'Packet', ariaLabel: 'Router packet settings' },
+    { name: 'Pricing', icon: Crown, label: 'Pricing', ariaLabel: 'Pricing and plans' },
+    { name: 'UcpApiDocs', icon: Book, label: 'Docs', ariaLabel: 'API documentation' }
   ];
 
   return (
@@ -196,6 +196,8 @@ export default function Layout({ children, currentPageName }) {
               key={item.name}
               to={createPageUrl(item.name)}
               onClick={(e) => handleTabClick(e, item.name)}
+              aria-label={item.ariaLabel}
+              aria-current={currentPageName === item.name ? 'page' : undefined}
               className={cn(
                 "flex flex-col items-center justify-center gap-1 py-2 px-3 min-h-[56px] min-w-[44px] flex-1 transition-colors",
                 currentPageName === item.name
@@ -211,7 +213,8 @@ export default function Layout({ children, currentPageName }) {
       </nav>
 
       {/* Footer */}
-      <footer className="py-8 mt-12 border-t border-border bg-background pb-20 md:pb-8">
+      {/* Bottom padding clears the fixed mobile tab bar (56px) plus the device safe area */}
+      <footer className="py-8 mt-12 border-t border-border bg-background pb-[calc(4rem_+_env(safe-area-inset-bottom))] md:pb-8">
         <div className="max-w-5xl mx-auto px-4 text-center space-y-4">
           <div className="flex items-center justify-center gap-4 text-sm">
             <Link to={createPageUrl('About')} className="text-muted-foreground hover:text-brand transition-colors">

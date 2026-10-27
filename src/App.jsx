@@ -108,7 +108,8 @@ function App() {
           <AuthenticatedApp />
         </Router>
         <Toaster />
-        <VisualEditAgent />
+        {/* Builder-only visual editing helper: no DOM observers or scroll listeners in production/TWA builds */}
+        {import.meta.env.DEV && <VisualEditAgent />}
       </QueryClientProvider>
     </AuthProvider>
   )
