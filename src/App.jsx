@@ -1,4 +1,5 @@
 import './App.css'
+import { lazy, Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -9,11 +10,14 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-import Pricing from './pages/Pricing';
-import ThankYou from './pages/ThankYou';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import Terms from './pages/Terms';
-import WhitePaper from './pages/WhitePaper';
+import PageLoadingSpinner from '@/components/PageLoadingSpinner';
+
+// Route-level code splitting — these pages load their own chunk on first visit.
+const Pricing = lazy(() => import('./pages/Pricing'));
+const ThankYou = lazy(() => import('./pages/ThankYou'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const Terms = lazy(() => import('./pages/Terms'));
+const WhitePaper = lazy(() => import('./pages/WhitePaper'));
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -22,6 +26,14 @@ const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   <Layout currentPageName={currentPageName}>{children}</Layout>
   : <>{children}</>;
+
+// Renders a route inside the layout, showing a spinner while its chunk loads so
+// the nav and footer stay in place.
+const RoutedPage = ({ pageName, children }) => (
+  <LayoutWrapper currentPageName={pageName}>
+    <Suspense fallback={<PageLoadingSpinner />}>{children}</Suspense>
+  </LayoutWrapper>
+);
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
@@ -50,35 +62,35 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/" element={
-        <LayoutWrapper currentPageName={mainPageKey}>
+        <RoutedPage pageName={mainPageKey}>
           <MainPage />
-        </LayoutWrapper>
+        </RoutedPage>
       } />
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
           key={path}
           path={`/${path}`}
           element={
-            <LayoutWrapper currentPageName={path}>
+            <RoutedPage pageName={path}>
               <Page />
-            </LayoutWrapper>
+            </RoutedPage>
           }
         />
       ))}
       <Route path="/Pricing" element={
-        <LayoutWrapper currentPageName="Pricing"><Pricing /></LayoutWrapper>
+        <RoutedPage pageName="Pricing"><Pricing /></RoutedPage>
       } />
       <Route path="/ThankYou" element={
-        <LayoutWrapper currentPageName="ThankYou"><ThankYou /></LayoutWrapper>
+        <RoutedPage pageName="ThankYou"><ThankYou /></RoutedPage>
       } />
       <Route path="/PrivacyPolicy" element={
-        <LayoutWrapper currentPageName="PrivacyPolicy"><PrivacyPolicy /></LayoutWrapper>
+        <RoutedPage pageName="PrivacyPolicy"><PrivacyPolicy /></RoutedPage>
       } />
       <Route path="/Terms" element={
-        <LayoutWrapper currentPageName="Terms"><Terms /></LayoutWrapper>
+        <RoutedPage pageName="Terms"><Terms /></RoutedPage>
       } />
       <Route path="/WhitePaper" element={
-        <LayoutWrapper currentPageName="WhitePaper"><WhitePaper /></LayoutWrapper>
+        <RoutedPage pageName="WhitePaper"><WhitePaper /></RoutedPage>
       } />
       <Route path="*" element={<PageNotFound />} />
     </Routes>

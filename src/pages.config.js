@@ -1,19 +1,17 @@
+import { lazy } from 'react';
 import Home from './pages/Home';
-import PerformanceMonitoring from './pages/PerformanceMonitoring';
-import RouterPacket from './pages/RouterPacket';
-import UcpApiDocs from './pages/UcpApiDocs';
-import About from './pages/About';
-import Contact from './pages/Contact';
 import __Layout from './Layout.jsx';
 
 
+// Home is the entry page and stays in the initial bundle; every other page is
+// split into its own chunk so the first load stays small.
 export const PAGES = {
     "Home": Home,
-    "PerformanceMonitoring": PerformanceMonitoring,
-    "RouterPacket": RouterPacket,
-    "UcpApiDocs": UcpApiDocs,
-    "About": About,
-    "Contact": Contact,
+    "PerformanceMonitoring": lazy(() => import('./pages/PerformanceMonitoring')),
+    "RouterPacket": lazy(() => import('./pages/RouterPacket')),
+    "UcpApiDocs": lazy(() => import('./pages/UcpApiDocs')),
+    "About": lazy(() => import('./pages/About')),
+    "Contact": lazy(() => import('./pages/Contact')),
 }
 
 export const pagesConfig = {

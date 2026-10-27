@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ResponsiveSelect from '@/components/ucp/ResponsiveSelect';
+import PullToRefresh from '@/components/ucp/PullToRefresh';
 import { cn } from '@/lib/utils';
 import { 
   LineChart, Line, AreaChart, Area, BarChart, Bar,
@@ -199,6 +200,7 @@ export default function PerformanceMonitoring() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+      <PullToRefresh onRefresh={() => refetch()}>
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
@@ -540,6 +542,7 @@ export default function PerformanceMonitoring() {
           </TabsContent>
         </Tabs>
       </div>
+      </PullToRefresh>
     </div>
   );
 }

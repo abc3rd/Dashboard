@@ -8,6 +8,8 @@ import { ChevronDown, ChevronUp, Clock, History, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import ModelBadge from './ModelBadge';
 import ConfidenceMeter from './ConfidenceMeter';
+import QueryHistoryCard from './QueryHistoryCard';
+import PendingQueryCard from './PendingQueryCard';
 import { cn } from '@/lib/utils';
 
 function ExpandableRow({ query }) {
@@ -120,7 +122,16 @@ export default function QueryHistoryTable({ limit = 10, optimisticQuery = null }
         </div>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="overflow-x-auto">
+        {/* Mobile: stacked cards, one per query */}
+        <div className="md:hidden">
+          {optimisticQuery && <PendingQueryCard prompt={optimisticQuery.prompt} />}
+          {queries.map((query) => (
+            <QueryHistoryCard key={query.id} query={query} />
+          ))}
+        </div>
+
+        {/* Tablet and up: unchanged table layout */}
+        <div className="hidden md:block overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-50 hover:bg-slate-50">

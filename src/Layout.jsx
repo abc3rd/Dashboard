@@ -26,12 +26,21 @@ export default function Layout({ children, currentPageName }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [direction, setDirection] = useState(1);
-  const stackRef = useRef([location.pathname]);
+  // Every bottom tab keeps its own navigation stack, so switching tabs restores
+  // where the user left off while transitions can still tell forward from backward.
+  const tabStacksRef = useRef({});
+  const activeTabRef = useRef(null);
 
-  // Detect forward (push) vs backward (pop) navigation for directional transitions
+  // Detect forward (push) vs backward (pop) navigation for directional transitions.
+  // This also keeps the current tab's stack up to date on every route change.
   useEffect(() => {
-    const stack = stackRef.current;
     const current = location.pathname;
+    // Secondary screens (White Paper, Terms, …) belong to the tab that opened them.
+    const pageTab = ROOT_PAGES.includes(currentPageName) ? currentPageName : null;
+    const tab = pageTab || activeTabRef.current || ROOT_PAGES[0];
+    activeTabRef.current = tab;
+
+    const stack = tabStacksRef.current[tab] || [];
     const idx = stack.indexOf(current);
     if (idx === -1) {
       stack.push(current);
@@ -43,13 +52,41 @@ export default function Layout({ children, currentPageName }) {
       stack.splice(idx + 1);
       setDirection(-1);
     }
-  }, [location.pathname]);
+    tabStacksRef.current[tab] = stack;
+  }, [location.pathname, currentPageName]);
 
   const handleNavClick = (e, itemName) => {
     if (currentPageName === itemName) {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  };
+
+  // Bottom tab bar: restore the target tab's stack, or start it at the tab root.
+  const handleTabClick = (e, tabName) => {
+    e.preventDefault();
+    const current = location.pathname;
+    const rootPath = createPageUrl(tabName);
+
+    if (activeTabRef.current === tabName) {
+      // Re-selecting the active tab returns to its root instead of only scrolling.
+      const atRoot = current === rootPath || (tabName === ROOT_PAGES[0] && current === '/');
+      if (atRoot) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        setDirection(-1);
+        navigate(rootPath);
+        window.scrollTo({ top: 0 });
+      }
+      return;
+    }
+
+    const stack = tabStacksRef.current[tabName] || [];
+    const target = stack.length ? stack[stack.length - 1] : rootPath;
+    const from = ROOT_PAGES.indexOf(activeTabRef.current);
+    const to = ROOT_PAGES.indexOf(tabName);
+    setDirection(from !== -1 && to < from ? -1 : 1);
+    if (target !== current) navigate(target);
   };
   const navItems = [
     { name: 'Home', icon: MessageSquare, label: 'Ask' },
@@ -158,7 +195,7 @@ export default function Layout({ children, currentPageName }) {
             <Link
               key={item.name}
               to={createPageUrl(item.name)}
-              onClick={(e) => handleNavClick(e, item.name)}
+              onClick={(e) => handleTabClick(e, item.name)}
               className={cn(
                 "flex flex-col items-center justify-center gap-1 py-2 px-3 min-h-[56px] min-w-[44px] flex-1 transition-colors",
                 currentPageName === item.name

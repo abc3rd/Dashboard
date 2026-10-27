@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Sparkles, Crown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PromptInput from '@/components/ucp/PromptInput';
-import AnswerCard from '@/components/ucp/AnswerCard';
+// The answer card carries the markdown renderer, which isn't needed until an
+// answer exists — splitting it keeps it out of the first load.
+const loadAnswerCard = () => import('@/components/ucp/AnswerCard');
+const AnswerCard = lazy(loadAnswerCard);
 import UcpStatusBadge from '@/components/ucp/UcpStatusBadge';
 import MetricsCard from '@/components/ucp/MetricsCard';
 import QueryHistoryTable from '@/components/ucp/QueryHistoryTable';
 import PullToRefresh from '@/components/ucp/PullToRefresh';
+import PageLoadingSpinner from '@/components/PageLoadingSpinner';
 import { UcpRouterService } from '@/components/ucp/UcpService';
 import { useSubscription, useDailyQueryCount, FREE_DAILY_LIMIT } from '@/hooks/useSubscription';
 import { useSessionId } from '@/hooks/useSessionId';
@@ -50,6 +54,8 @@ export default function Home() {
 
   const handleSubmit = () => {
     if (prompt.trim()) {
+      // Warm the answer card chunk while the model is still working.
+      loadAnswerCard();
       setOptimisticQuery({ id: 'optimistic', prompt, created_date: new Date().toISOString() });
       askMutation.mutate(prompt);
     }
@@ -126,7 +132,9 @@ export default function Home() {
         {/* Result */}
         {result && (
           <div className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <AnswerCard result={result} />
+            <Suspense fallback={<PageLoadingSpinner />}>
+              <AnswerCard result={result} />
+            </Suspense>
           </div>
         )}
 
