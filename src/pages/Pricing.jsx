@@ -60,6 +60,11 @@ export default function Pricing() {
   const isPro = tier === 'pro';
   const [androidTWA] = useState(() => isAndroidTWA());
 
+  // Any auth-required response (401 or a "please log in" message) routes the user
+  // to sign-in instead of surfacing a dead-end error toast. Play's broken-
+  // functionality policy requires buttons to return usable content, not a dead end.
+  const requiresSignIn = (msg) => /log in|sign in|authenticat|unauthor/i.test(msg || '');
+
   const handleUpgrade = async (planId) => {
     if (loadingPlan) return;
     // Omega Access is tied to an account, so the upgrade flow begins with sign-in
@@ -73,6 +78,10 @@ export default function Pricing() {
       const res = await base44.functions.invoke('create-checkout', { plan: planId });
       const data = res.data || res;
       if (data.error) {
+        if (requiresSignIn(data.error)) {
+          navigateToLogin();
+          return;
+        }
         toast.error(data.error);
         return;
       }
@@ -82,7 +91,7 @@ export default function Pricing() {
         toast.error('No checkout URL returned.');
       }
     } catch (e) {
-      if (e?.response?.status === 401) {
+      if (e?.response?.status === 401 || requiresSignIn(e?.response?.data?.error || e?.message)) {
         navigateToLogin();
         return;
       }
