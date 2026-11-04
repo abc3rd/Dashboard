@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useSubscription, useDailyQueryCount, FREE_DAILY_LIMIT } from '@/hooks/useSubscription';
@@ -89,7 +89,7 @@ export default function Pricing() {
         return;
       }
       if (data.redirectUrl) {
-        openExternalLink(data.redirectUrl);
+        openExternalLink(data.redirectUrl, { purpose: 'checkout' });
       } else {
         toast.error('No checkout URL returned.');
       }
@@ -232,18 +232,18 @@ export default function Pricing() {
                     onClick={() => handleUpgrade(p.id)}
                   >
                     {loadingPlan === p.id ? (
-                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Redirecting…</>
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Preparing checkout…</>
                     ) : isPro ? (
                       'Active'
                     ) : (
                       `Upgrade — ${p.label}`
                     )}
                   </Button>
+                  <CheckoutComplianceNote plan={p.id} />
                 </CardContent>
               </Card>
             ))}
           </div>
-          <CheckoutComplianceNote />
         </div>
         )}
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import LegalPage from '@/components/LegalPage';
 
 const CONTACT_EMAIL = 'contact@omegaui.com';
@@ -7,7 +6,7 @@ export default function Terms() {
   return (
     <LegalPage
       title="Terms and Conditions"
-      effectiveDate="July 22, 2026"
+      effectiveDate="November 4, 2026"
       intro={`These Terms and Conditions ("Terms") govern your use of the UCP AI Router application (the "Service"), provided by Omega UI, LLC. By creating an account or using the Service, you agree to these Terms. If you do not agree, do not use the Service.`}
       contactEmail={CONTACT_EMAIL}
       sections={[
@@ -47,8 +46,28 @@ export default function Terms() {
               'Your subscription automatically renews at the then-current price until you cancel.',
               'You can cancel at any time; cancellation stops future renewals but does not refund the current period.',
               'Taxes, where applicable, are added to your charges.',
-              'Refunds, where available, are handled according to the payment provider\u2019s refund policy and applicable law.',
+              'Refund eligibility is described in the Refund Policy below. Contact Omega UI, LLC customer support to request a refund or dispute a charge; approved refunds are processed through Base44 Payments.',
               'We may change pricing with reasonable advance notice; existing subscriptions are unaffected until renewal.',
+            ],
+          ],
+        },
+        {
+          id: 'refunds',
+          heading: 'Refund Policy',
+          paragraphs: [
+            'Cancelling a subscription stops future renewals but does not refund the current paid period, except where required by applicable law. Lifetime access is a one-time purchase and is non-refundable, except where required by applicable law. Any mandatory consumer rights remain unaffected.',
+            'To request a refund required by law or report a billing error, use the Customer support link beside the checkout button or open the Contact page. Include your order reference, purchase date, amount and the reason for your request. Do not send passwords, authentication tokens or full payment card details. Refunds that are approved are processed through the original payment method where supported.',
+          ],
+        },
+        {
+          id: 'disputes',
+          heading: 'Customer Support and Unauthorized Transaction Disputes',
+          paragraphs: [
+            'Customer support is available from the Contact page and the support links shown beside every purchase button.',
+            [
+              'Report the unauthorized or incorrect charge to customer support with the order reference, charge date, amount and a description of the problem. Never include passwords or full card details.',
+              'Keep your receipt and support correspondence. Support will review the reported transaction and explain the outcome and any available cancellation or refund options.',
+              'If the issue remains unresolved, contact your card issuer or payment provider about its dispute process and applicable deadlines. This process does not limit your statutory rights.',
             ],
           ],
         },

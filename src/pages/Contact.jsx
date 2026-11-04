@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Mail, Send, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,19 +15,25 @@ export default function Contact() {
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
+  const [copying, setCopying] = useState(false);
   const { openExternalLink } = useExternalLink();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !message.trim()) {
       toast.error('Please fill in all required fields');
       return;
     }
-    const mailtoSubject = encodeURIComponent(subject || `Contact from ${name}`);
-    const mailtoBody = encodeURIComponent(
-      `${message}\n\n---\nFrom: ${name}\nEmail: ${email}`
-    );
-    openExternalLink(`mailto:${CONTACT_EMAIL}?subject=${mailtoSubject}&body=${mailtoBody}`);
+    setCopying(true);
+    try {
+      await navigator.clipboard.writeText(`Subject: ${subject || 'AI Router support'}\n\n${message}\n\nFrom: ${name}\nEmail: ${email}`);
+      toast.success('Message copied. After continuing, paste it into your email.');
+      openExternalLink(`mailto:${CONTACT_EMAIL}`);
+    } catch {
+      toast.error('Could not copy your message. Copy the form text manually, then use the email link above.');
+    } finally {
+      setCopying(false);
+    }
   };
 
   return (
@@ -97,7 +103,8 @@ export default function Contact() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <p id="contact-privacy-note" className="mb-4 text-sm text-muted-foreground">Your message will be copied so you can paste it into your email app. Your name, email and message are not added to the outgoing URL.</p>
+              <form onSubmit={handleSubmit} aria-describedby="contact-privacy-note" className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name" className="text-foreground">Name <span className="text-brand">*</span></Label>
                   <Input
@@ -144,10 +151,11 @@ export default function Contact() {
                 </div>
                 <Button
                   type="submit"
+                  disabled={copying}
                   className="w-full bg-brand hover:bg-brand-dark text-white min-h-[44px]"
                 >
                   <Send className="w-4 h-4 mr-2" />
-                  Send Message
+                  {copying ? 'Copying…' : 'Copy Message & Open Email'}
                 </Button>
               </form>
             </CardContent>

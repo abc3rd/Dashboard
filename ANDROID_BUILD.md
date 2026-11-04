@@ -4,15 +4,60 @@ This project is packaged for Android as a **Trusted Web Activity (TWA)** using
 Google's [Bubblewrap CLI](https://github.com/GoogleChromeLabs/bubblewrap). The TWA
 wraps the deployed PWA, so no native code is added to the React/Vite app.
 
-## Why TWA (not Capacitor / Play Billing)
-- The app is a Vite/React PWA; a TWA reuses the deployed site with no native bridge.
-- Omega Access is sold via Base44 Payments (Wix). Google Play requires Play Billing
-  for digital goods consumed in-app, and the Play Billing Library is incompatible
-  with this WebView/TWA architecture. The TWA therefore offers **no in-app purchase
-  flow** — the `startUrl` includes `?platform=android`, which the app detects
-  (`src/lib/platform.js`) to hide the Upgrade CTAs and direct users to the website.
-  Entitlement is account-based (`Subscription` entity), so a web purchase unlocks
-  Omega Access in the Android app on the next sign-in.
+## External Content Links Program: implementation boundary
+
+This repository contains the React/Vite website and a Bubblewrap configuration,
+not a React Native, Flutter or generated Android application. There is no
+`Linking.openURL()`, `url_launcher`, native BillingClient or native navigation
+bridge to replace here. Native integration is possible in the Android project;
+it is not provided by this web-only TWA configuration.
+
+The website uses `ExternalLinkProvider` and `ExternalLinkModal` for confirmed
+outgoing navigation, including modified and middle clicks. It shows the complete
+approved destination and never forwards the current page's query or app auth
+credentials. Known personal/authentication parameters are blocked rather than
+silently stripped. Opaque provider checkout handles are permitted only for the
+server-created checkout flow. A no-referrer policy prevents page query data from
+leaking in the Referer header. Platform login and MCP OAuth redirects remain
+platform-managed authentication flows, not purchase/content linkouts.
+
+Web purchase buttons and the checkout departure modal display refund terms,
+customer support and unauthorized-charge dispute instructions. Contact-form
+messages are copied for the user to paste into their email app, rather than
+putting personal data in a mailto query. These changes do not alter the hosted
+Base44 Payments checkout page. Its merchant support/refund disclosures must also
+be configured and verified at the payment provider; the checkout API used here
+does not expose fields for injecting custom controls next to its payment button.
+
+Android purchase linkouts remain disabled, including copy-link workarounds.
+A custom web modal alone does **not** complete Google's program integration or
+resolve a Play review. Before enabling Android purchases, the actual generated
+Android project and secure reporting backend need all of the following:
+
+- App enrollment and approval in the External Content Links Program.
+- Play Billing Library 8.2.1 or higher and billing-program initialization for
+  `EXTERNAL_CONTENT_LINK`.
+- Google's billing-program eligibility check, limiting offers to eligible users
+  in the US and its territories; fail closed on unsupported/unavailable results.
+- The required external transaction token, Google's information screen and
+  `launchExternalLink` flow. Launch only on the supported confirmed result.
+- Secure server-side correlation of the opaque attribution token with the
+  checkout. Do not substitute an app user ID, authentication token or fake token.
+- Current external transaction reporting, including trials/zero-value purchases,
+  and applicable service-fee requirements. Keep provider confirmation and access
+  grants server-side; a browser return is not proof of payment.
+- Native interception for any WebView/Intent navigation that can bypass the web
+  handler. Do not expose an arbitrary JavaScript-to-native URL launcher.
+
+No native bridge, reporting integration, approval flag or program enrollment is
+simulated by the web changes. Native and hosted-checkout work remains outstanding.
+
+Authoritative requirements:
+- https://developer.android.com/google/play/billing/externalcontentlinks/integration
+- https://support.google.com/googleplay/android-developer/answer/16470497
+
+The TWA start URL includes `?platform=android` so the website can keep purchase
+options unavailable in this build. Already-active account access remains usable.
 
 ## Prerequisites
 - Node.js 18+

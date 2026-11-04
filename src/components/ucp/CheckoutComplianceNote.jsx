@@ -1,48 +1,32 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldAlert, Mail, FileText } from 'lucide-react';
-
-const SUPPORT_EMAIL = 'contact@omegaui.com';
 
 // External Content Links Program — checkout & transaction compliance UI.
 // Shown adjacent to purchase action buttons and on the post-checkout screen so
 // refund terms, support contact, and the dispute-resolution path are visible
 // right where the buyer commits to the purchase.
-export default function CheckoutComplianceNote({ showRefund = true }) {
+export default function CheckoutComplianceNote({ showRefund = true, plan }) {
   return (
-    <div className="mt-6 rounded-xl border border-border bg-muted/40 p-4 text-xs text-muted-foreground space-y-3">
+    <aside aria-label="Refund policy and customer support" className="mt-3 rounded-xl border border-border bg-muted/40 p-4 text-sm text-muted-foreground space-y-3">
       {showRefund && (
         <div className="flex items-start gap-2">
-          <ShieldAlert className="w-4 h-4 text-brand mt-0.5 shrink-0" />
+          <ShieldAlert className="w-4 h-4 text-brand mt-0.5 shrink-0" aria-hidden="true" />
           <p>
             <span className="font-semibold text-foreground">Refund policy.</span>{' '}
-            Subscriptions renew automatically until you cancel. Cancelling stops
-            future renewals but does not refund the current period. The Lifetime
-            plan is a one-time purchase and is final, except where a refund is
-            required by applicable law. Refunds, where available, are handled by
-            the payment provider (Base44 Payments) under its refund policy and
-            local law.
+            {plan === 'lifetime'
+              ? 'Lifetime is a one-time, non-refundable purchase, except where a refund is required by applicable law.'
+              : plan
+                ? 'Subscriptions renew automatically until cancelled. Cancellation stops future renewals but does not refund the current paid period, except where required by applicable law.'
+                : 'Subscription cancellation stops future renewals but does not refund the current paid period. Lifetime purchases are non-refundable, except where required by applicable law.'}
+            {' '}<Link to="/Terms#refunds" className="text-brand underline">Full refund terms</Link>
           </p>
         </div>
       )}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-        <span className="inline-flex items-center gap-1.5">
-          <Mail className="w-3.5 h-3.5 text-brand" />
-          <a
-            href={`mailto:${SUPPORT_EMAIL}`}
-            className="text-brand hover:underline"
-          >
-            {SUPPORT_EMAIL}
-          </a>
-          <span className="sr-only">Customer support</span>
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <FileText className="w-3.5 h-3.5 text-brand" />
-          <Link to="/Terms" className="text-brand hover:underline">
-            Dispute resolution & Terms
-          </Link>
-        </span>
+      <p><span className="font-semibold text-foreground">Dispute an unauthorized charge:</span> Contact support with the order reference, charge date, amount and a description of the issue. Do not send passwords or full card details. If unresolved, contact your card issuer about its dispute process.</p>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <Link to="/Contact" className="inline-flex min-h-11 items-center gap-1.5 text-brand underline"><Mail className="h-4 w-4" aria-hidden="true" />Customer support</Link>
+        <Link to="/Terms#disputes" className="inline-flex min-h-11 items-center gap-1.5 text-brand underline"><FileText className="h-4 w-4" aria-hidden="true" />Dispute resolution</Link>
       </div>
-    </div>
+    </aside>
   );
 }
