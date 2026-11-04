@@ -11,6 +11,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import PageLoadingSpinner from '@/components/PageLoadingSpinner';
+import { ExternalLinkProvider } from '@/components/ucp/ExternalLinkProvider';
 
 // Route-level code splitting — these pages load their own chunk on first visit.
 const Pricing = lazy(() => import('./pages/Pricing'));
@@ -104,8 +105,10 @@ function App() {
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
         <Router>
-          <NavigationTracker />
-          <AuthenticatedApp />
+          <ExternalLinkProvider>
+            <NavigationTracker />
+            <AuthenticatedApp />
+          </ExternalLinkProvider>
         </Router>
         <Toaster />
         {/* Builder-only visual editing helper: no DOM observers or scroll listeners in production/TWA builds */}

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { useExternalLink } from '@/components/ucp/ExternalLinkProvider';
 
 const CONTACT_EMAIL = 'contact@omegaui.com';
 
@@ -14,6 +15,7 @@ export default function Contact() {
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
+  const { openExternalLink } = useExternalLink();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,8 +27,7 @@ export default function Contact() {
     const mailtoBody = encodeURIComponent(
       `${message}\n\n---\nFrom: ${name}\nEmail: ${email}`
     );
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${mailtoSubject}&body=${mailtoBody}`;
-    toast.success('Opening your email client...');
+    openExternalLink(`mailto:${CONTACT_EMAIL}?subject=${mailtoSubject}&body=${mailtoBody}`);
   };
 
   return (

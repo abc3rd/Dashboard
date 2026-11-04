@@ -9,6 +9,8 @@ import { toast } from 'sonner';
 import { isAndroidTWA } from '@/lib/platform';
 import AndroidUpgradeNotice from '@/components/ucp/AndroidUpgradeNotice';
 import DeleteAccountDialog from '@/components/ucp/DeleteAccountDialog';
+import CheckoutComplianceNote from '@/components/ucp/CheckoutComplianceNote';
+import { useExternalLink } from '@/components/ucp/ExternalLinkProvider';
 import { useAuth } from '@/lib/AuthContext';
 
 const PRO_PLANS = [
@@ -55,6 +57,7 @@ const PRO_FEATURES = [
 export default function Pricing() {
   const { tier, plan } = useSubscription();
   const { isAuthenticated, navigateToLogin } = useAuth();
+  const { openExternalLink } = useExternalLink();
   const todayCount = useDailyQueryCount();
   const [loadingPlan, setLoadingPlan] = useState(null);
   const isPro = tier === 'pro';
@@ -86,7 +89,7 @@ export default function Pricing() {
         return;
       }
       if (data.redirectUrl) {
-        window.location.href = data.redirectUrl;
+        openExternalLink(data.redirectUrl);
       } else {
         toast.error('No checkout URL returned.');
       }
@@ -240,6 +243,7 @@ export default function Pricing() {
               </Card>
             ))}
           </div>
+          <CheckoutComplianceNote />
         </div>
         )}
 

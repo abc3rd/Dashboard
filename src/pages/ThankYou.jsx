@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2, CheckCircle2, ShieldCheck, Crown } from 'lucide-react';
+import CheckoutComplianceNote from '@/components/ucp/CheckoutComplianceNote';
 
 export default function ThankYou() {
   const [status, setStatus] = useState('pending'); // pending | active
@@ -80,6 +81,8 @@ export default function ThankYou() {
                 </Link>
               </>
             )}
+
+            <CheckoutComplianceNote />
 
             <div className="flex items-center justify-center gap-2 mt-6 text-xs text-muted-foreground">
               <ShieldCheck className="w-3.5 h-3.5 text-brand" />
