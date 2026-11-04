@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ResponsiveSelect from '@/components/ucp/ResponsiveSelect';
 import PullToRefresh from '@/components/ucp/PullToRefresh';
+import { isFallbackQuery, getFallbackModel } from '@/lib/fallbackDetection';
 import { cn } from '@/lib/utils';
 import { 
   LineChart, Line, AreaChart, Area, BarChart, Bar,
@@ -37,6 +38,14 @@ export default function PerformanceMonitoring() {
     refetchInterval: autoRefresh ? 10000 : false,
   });
 
+  // Active router packet — admin-only read. When unavailable (non-admin or none
+  // configured), fallback analysis is skipped rather than shown with no signal.
+  const { data: routerPacket = null } = useQuery({
+    queryKey: ['activeRouterPacket'],
+    queryFn: () => base44.entities.RouterPacket.list('-created_date', 1).then((p) => p[0] || null),
+    refetchInterval: autoRefresh ? 30000 : false,
+  });
+
   // Process metrics from query logs
   const metrics = React.useMemo(() => {
     if (!queryLogs.length) return null;
@@ -55,6 +64,11 @@ export default function PerformanceMonitoring() {
     const filteredLogs = queryLogs.filter(log => 
       new Date(log.created_date) >= startDate
     );
+
+    // Queries where no selection rule matched and the router fell back to the
+    // default model — re-evaluated client-side from the active packet's rules.
+    const fallbackModel = getFallbackModel(routerPacket);
+    const fallbackQueries = filteredLogs.filter((log) => isFallbackQuery(routerPacket, log.prompt));
 
     // Group by time intervals
     const intervalMs = timeRange === '1h' ? 5 * 60 * 1000 : // 5 min intervals
@@ -143,12 +157,14 @@ export default function PerformanceMonitoring() {
       totalCost,
       savings,
       savingsPercent,
+      fallbackModel,
+      fallbackQueries,
       modelDistribution: [
         { name: 'Fast Model', value: fastQueries, color: '#c3c3c3' },
         { name: 'Smart Model', value: smartQueries, color: '#31509c' }
       ]
     };
-  }, [queryLogs, timeRange]);
+  }, [queryLogs, timeRange, routerPacket]);
 
   // Detect anomalies and generate alerts
   useEffect(() => {
@@ -331,6 +347,52 @@ export default function PerformanceMonitoring() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Default Model Fallback — prompts that matched no selection rule */}
+        <Card className="border-0 shadow-md mb-8">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <AlertTriangle className="w-5 h-5 text-amber-500" />
+              Default Model Fallback
+            </CardTitle>
+            <CardDescription>
+              Queries where no selection rule matched and the router fell back to the default model
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!routerPacket ? (
+              <p className="text-sm text-muted-foreground">
+                Router packet unavailable. Only admins can view fallback analysis.
+              </p>
+            ) : (metrics?.fallbackQueries?.length || 0) === 0 ? (
+              <p className="text-sm text-muted-foreground flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-brand" />
+                No fallbacks in this range — every prompt matched a selection rule.
+              </p>
+            ) : (
+              <div className="space-y-2 max-h-72 overflow-y-auto">
+                {metrics.fallbackQueries.slice(0, 50).map((q) => (
+                  <div
+                    key={q.id}
+                    className="flex items-start gap-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900"
+                  >
+                    <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm text-foreground break-words line-clamp-2">{q.prompt}</p>
+                      <p className="text-xs text-muted-foreground mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <span>{format(new Date(q.created_date), 'MMM d, HH:mm')}</span>
+                        <span>•</span>
+                        <span>Fell back to <span className="font-medium">{q.chosen_model}</span></span>
+                        <span>•</span>
+                        <span>{q.latency_ms}ms</span>
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         <Tabs defaultValue="volume" className="space-y-6">
           <TabsList className="bg-muted border shadow-sm">

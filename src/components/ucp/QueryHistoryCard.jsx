@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Clock, ChevronDown, ChevronUp } from 'lucide-react';
 import { format } from 'date-fns';
+import { Checkbox } from '@/components/ui/checkbox';
 import ModelBadge from './ModelBadge';
 import ConfidenceMeter from './ConfidenceMeter';
 
 // Mobile counterpart to a history table row: one stacked card per query,
 // tapping the header reveals the full prompt and answer.
-export default function QueryHistoryCard({ query }) {
+export default function QueryHistoryCard({ query, selected = false, onToggleSelect = null }) {
   const [expanded, setExpanded] = useState(false);
 
   const truncatedPrompt = query.prompt?.length > 80
@@ -38,6 +39,13 @@ export default function QueryHistoryCard({ query }) {
       </button>
 
       <div className="flex items-center gap-3 px-4 pb-3">
+        {onToggleSelect && (
+          <Checkbox
+            checked={selected}
+            onCheckedChange={() => onToggleSelect(query.id)}
+            aria-label={`Select query from ${format(new Date(query.created_date), 'MMM d, HH:mm')}`}
+          />
+        )}
         <ModelBadge modelId={query.chosen_model} size="small" />
         <div className="flex-1 min-w-0">
           <ConfidenceMeter value={query.confidence || 0} showLabel={false} />
