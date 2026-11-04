@@ -10,7 +10,7 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { ChevronDown, ChevronUp, Clock, History, Loader2, Trash2, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock, Download, History, Loader2, Trash2, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import ModelBadge from './ModelBadge';
@@ -142,6 +142,38 @@ export default function QueryHistoryTable({ limit = 10, optimisticQuery = null }
 
   const clearSelection = () => setSelected(new Set());
 
+  // Per-account export: the list call is already scoped to the signed-in user's
+  // own logs by Row-Level Security, so this CSV only ever contains the current
+  // account's records (admins get their own view). No shared/team bucket.
+  const handleExport = async () => {
+    try {
+      const { items = [] } = await base44.entities.QueryLog.list('-created_date', 500);
+      const escape = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+      const rows = [
+        ['Created', 'Model', 'Confidence', 'Latency (ms)', 'Prompt', 'Answer']
+          .map(escape).join(','),
+        ...items.map((q) => escape(format(new Date(q.created_date), "yyyy-MM-dd HH:mm:ss"))
+          + ',' + escape(q.chosen_model)
+          + ',' + escape(q.confidence)
+          + ',' + escape(q.latency_ms)
+          + ',' + escape(q.prompt)
+          + ',' + escape(q.answer))
+      ];
+      const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `ucp-queries-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      toast.success(`Exported ${items.length} ${items.length === 1 ? 'log' : 'logs'} (this account only).`);
+    } catch (e) {
+      toast.error(e?.response?.data?.error || e?.message || 'Export failed.');
+    }
+  };
+
   const handleDelete = async () => {
     const ids = Array.from(selected);
     setConfirmOpen(false);
@@ -192,6 +224,18 @@ export default function QueryHistoryTable({ limit = 10, optimisticQuery = null }
             <CardTitle className="text-base font-semibold text-slate-700">
               Recent Queries
             </CardTitle>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleExport}
+              className="min-h-11"
+              aria-label="Export your query logs as a CSV file (this account only)"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Export CSV
+            </Button>
           </div>
           {selectedCount > 0 && (
             <div className="flex items-center gap-2">
