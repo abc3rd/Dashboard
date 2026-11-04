@@ -21,7 +21,8 @@ export default function Terms() {
           id: 'the-service',
           heading: 'The Service',
           paragraphs: [
-            'Deterministic Dashboard routes your prompts to AI models using the Universal Command Protocol (UCP) and deterministic routing rules. The Service includes a free tier and a paid subscription (Omega Access) with higher limits and additional features.',
+            'Deterministic Dashboard routes your prompts to AI models using the Universal Command Protocol (UCP) and deterministic, rules-based selection. The Service evaluates each prompt against configured routing rules to select the most appropriate model, tracks performance metrics such as latency and confidence, and logs your query history for your private review.',
+            'The Service includes a free tier with a daily query limit and a paid subscription (Omega Access) with higher limits and additional features as described below.',
           ],
         },
         {
@@ -34,6 +35,18 @@ export default function Terms() {
               'Keep your credentials and account secure and confidential.',
               'Be at least 13 years old (or 16 where required by local law).',
               'Be responsible for all activity under your account and promptly notify us of unauthorized use.',
+            ],
+          ],
+        },
+        {
+          id: 'usage-limits',
+          heading: 'Free Tier and Usage Limits',
+          paragraphs: [
+            'The free tier allows a limited number of queries per day at no cost. Daily limits are measured per account (or per anonymous session identifier when you are not signed in) and reset on a rolling basis.',
+            [
+              'When you reach the free-tier limit, you must wait for the limit to reset or subscribe to Omega Access for unlimited routing.',
+              'We may adjust free-tier limits, available models, and features at any time. Routing rules and model availability are set by administrators and may change without notice.',
+              'Abuse of the free tier, including creating multiple accounts or sessions to bypass limits, may result in suspension.',
             ],
           ],
         },
@@ -105,6 +118,18 @@ export default function Terms() {
           heading: 'Intellectual Property',
           paragraphs: [
             'The Service, including its software, design, the UCP protocol, and related trademarks, is owned by Omega UI, LLC and its licensors. These Terms do not grant you any rights to our trademarks or proprietary technology beyond the limited right to use the Service as permitted here.',
+          ],
+        },
+        {
+          id: 'api-access',
+          heading: 'API and Developer Access',
+          paragraphs: [
+            'The Service may provide public API access for integrating the routing functionality into your own applications. If you use the API:',
+            [
+              'You must keep any API credentials secure and are responsible for all usage under your account.',
+              'You must comply with these Terms, the documented API usage limits, and the terms of any third-party AI model provider the Service routes to.',
+              'We may rate-limit, suspend, or revoke API access for abuse, security reasons, or violation of these Terms.',
+            ],
           ],
         },
         {

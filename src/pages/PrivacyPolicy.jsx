@@ -20,7 +20,8 @@ export default function PrivacyPolicy() {
               'Account information: Your email address and name, provided when you create an account through our authentication provider (Base44).',
               'Query data: The prompts you submit, the AI responses returned, the model selected, confidence scores, and response timing. This is linked to your account and, by default, visible only to you. Administrators may access records as needed to operate, secure, and maintain the Service.',
               'Subscription and payment data: Your email, selected plan, and subscription status, plus identifiers returned by our payment provider (Base44 Payments, powered by Wix). We do not collect, store, or process full card numbers — these are handled directly by the payment provider.',
-              'Technical and usage data: Basic device and browser information, authentication tokens, and service interaction logs used for security, reliability, and abuse prevention.',
+              'Anonymous session identifier: A randomly generated identifier stored locally when you use the free tier without signing in. It is used only for rate limiting and is not linked to your account or identity.',
+              'Technical and usage data: Basic device and browser information, authentication tokens, service interaction logs, and limited analytics events (such as feature usage and conversion) used for security, reliability, abuse prevention, and product improvement.',
             ],
           ],
         },
@@ -36,8 +37,23 @@ export default function PrivacyPolicy() {
               'Monitor performance, detect and prevent abuse, and secure the Service.',
               'Improve quality, fix issues, and develop new features.',
               'Communicate with you about your account, security, and required legal disclosures.',
+              'Collect limited analytics events to understand feature usage and measure conversions, subject to your cookie consent choice.',
               'Comply with legal obligations.',
             ],
+          ],
+        },
+        {
+          id: 'data-isolation',
+          heading: 'Data Isolation and Per-Account Access',
+          paragraphs: [
+            'Your data is isolated to your account. We enforce strict row-level access controls so that each user can only read and manage their own query logs, subscription, and account data.',
+            [
+              'Query logs: Only you and authorized administrators can view your logs. Other users cannot access them under any circumstance.',
+              'Subscriptions: Only you and authorized administrators can view your subscription details.',
+              'Router packets: Router configuration and packet data are restricted to administrators only.',
+              'Administrators: Administrators can access all records as needed to operate, secure, and maintain the Service. They cannot see your password or payment card details, which are handled exclusively by our authentication and payment providers.',
+            ],
+            'Free-tier users who submit queries without signing in are identified only by an anonymous session identifier for rate limiting. This identifier is not linked to any account or personal data.',
           ],
         },
         {
@@ -75,7 +91,8 @@ export default function PrivacyPolicy() {
             [
               'Query logs are retained while your account is active and are removed when you delete your account.',
               'Subscription records are kept while your subscription is active and for the period required for accounting and legal compliance.',
-              'You can delete your account and associated query data at any time using the Delete Account option in the app.',
+              'You can delete your account and associated query data at any time using the Delete Account option in the app. Deleting your account permanently removes your query logs and personal data from our systems.',
+              'Anonymous session identifiers used for free-tier rate limiting are kept only for the period needed to enforce rate limits and are then discarded.',
             ],
           ],
         },
