@@ -4,9 +4,10 @@ import { format } from 'date-fns';
 import { Checkbox } from '@/components/ui/checkbox';
 import ModelBadge from './ModelBadge';
 import ConfidenceMeter from './ConfidenceMeter';
+import TagEditor from './TagEditor';
 
 // Mobile counterpart to a history table row: one stacked card per query,
-// tapping the header reveals the full prompt and answer.
+// tapping the header reveals the full prompt, answer, and tag editor.
 export default function QueryHistoryCard({ query, selected = false, onToggleSelect = null }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -36,6 +37,15 @@ export default function QueryHistoryCard({ query, selected = false, onToggleSele
           </span>
         </span>
         <span className="block text-sm text-slate-700 break-words">{truncatedPrompt}</span>
+        {query.tags && query.tags.length > 0 && (
+          <span className="flex flex-wrap gap-1 mt-1.5">
+            {query.tags.map((t) => (
+              <span key={t} className="inline-flex items-center rounded-full bg-brand/10 text-brand text-[10px] font-medium px-1.5 py-0.5">
+                {t}
+              </span>
+            ))}
+          </span>
+        )}
       </button>
 
       <div className="flex items-center gap-3 px-4 pb-3">
@@ -54,6 +64,12 @@ export default function QueryHistoryCard({ query, selected = false, onToggleSele
 
       {expanded && (
         <div className="px-4 py-4 space-y-4 bg-slate-50 border-t border-slate-100">
+          <div>
+            <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+              Tags
+            </h4>
+            <TagEditor query={query} />
+          </div>
           <div>
             <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
               Full Prompt

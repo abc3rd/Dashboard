@@ -25,6 +25,13 @@
     "session_id": {
       "type": "string",
       "description": "Anonymous client session identifier used for free-tier rate limiting when no user is logged in"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "User-applied tags for organizing and finding past queries (private to the owner)"
     }
   },
   "required": [
@@ -49,9 +56,16 @@
       ]
     },
     "update": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     },
     "delete": {
       "user_condition": {

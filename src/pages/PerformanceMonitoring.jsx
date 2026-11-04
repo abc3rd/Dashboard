@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ResponsiveSelect from '@/components/ucp/ResponsiveSelect';
 import PullToRefresh from '@/components/ucp/PullToRefresh';
 import { isFallbackQuery, getFallbackModel } from '@/lib/fallbackDetection';
+import ModelUsageSummary from '@/components/ucp/ModelUsageSummary';
 import { cn } from '@/lib/utils';
 import { 
   LineChart, Line, AreaChart, Area, BarChart, Bar,
@@ -393,6 +394,9 @@ export default function PerformanceMonitoring() {
             )}
           </CardContent>
         </Card>
+
+        {/* Weekly model usage summary — visible regardless of selected time range */}
+        <ModelUsageSummary logs={queryLogs} />
 
         <Tabs defaultValue="volume" className="space-y-6">
           <TabsList className="bg-muted border shadow-sm">
