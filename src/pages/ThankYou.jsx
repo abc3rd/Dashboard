@@ -20,6 +20,7 @@ export default function ThankYou() {
         const active = subs.find((s) => s.status === 'active');
         if (active) {
           setStatus('active');
+          base44.analytics.track({ eventName: 'omega_access_subscribed' });
           return;
         }
       } catch (e) {
