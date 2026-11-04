@@ -113,7 +113,7 @@ A responsive React interface serves desktop browsers and an Android-optimized We
 UCP AI Router ships with a Pro-Utility freemium structure.
 
 - **Free tier.** Core routing, limited to a daily query budget (default 10). No account is required — a persistent client session id entitles anonymous visitors to the same daily allowance so the product can be evaluated without friction.
-- **Omega Access (Pro).** Unlimited routing, including unlimited high-throughput processing. Available as monthly, annual, or lifetime plans through Base44 Payments (powered by Wix Payments).
+- **Omega Access (Pro).** Unlimited routing, including unlimited high-throughput processing. Available as monthly or annual plans through Base44 Payments (powered by Wix Payments).
 
 The free-tier daily counter resets at the start of the caller's local day and is enforced server-side from the query log, so the limit cannot be bypassed by clearing client state — the count is authoritative.
 

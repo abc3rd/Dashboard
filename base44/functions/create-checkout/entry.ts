@@ -54,11 +54,6 @@ const PLANS: Record<string, PlanDef> = {
       description: "Unlimited AI routing — yearly billing with a 14-day free trial",
     },
   },
-  lifetime: {
-    name: "Omega Access — Lifetime",
-    price: "199.99",
-    subscription: null,
-  },
 };
 
 Deno.serve(async (req) => {
@@ -89,7 +84,7 @@ Deno.serve(async (req) => {
     }
     const plan = body.plan;
     if (!plan || !PLANS[plan]) {
-      return Response.json({ error: "Invalid plan. Choose monthly, annual, or lifetime." }, { status: 400 });
+      return Response.json({ error: "Invalid plan. Choose monthly or annual." }, { status: 400 });
     }
 
     const planDef = PLANS[plan];

@@ -13,11 +13,7 @@ export default function CheckoutComplianceNote({ showRefund = true, plan }) {
           <ShieldAlert className="w-4 h-4 text-brand mt-0.5 shrink-0" aria-hidden="true" />
           <p>
             <span className="font-semibold text-foreground">Refund policy.</span>{' '}
-            {plan === 'lifetime'
-              ? 'Lifetime is a one-time, non-refundable purchase, except where a refund is required by applicable law.'
-              : plan
-                ? 'Subscriptions renew automatically until cancelled. Cancellation stops future renewals but does not refund the current paid period, except where required by applicable law.'
-                : 'Subscription cancellation stops future renewals but does not refund the current paid period. Lifetime purchases are non-refundable, except where required by applicable law.'}
+            Subscriptions renew automatically until cancelled. Cancellation stops future renewals but does not refund the current paid period, except where required by applicable law.
             {' '}<Link to="/Terms#refunds" className="text-brand underline">Full refund terms</Link>
           </p>
         </div>

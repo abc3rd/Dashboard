@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { useSubscription, useDailyQueryCount, FREE_DAILY_LIMIT } from '@/hooks/useSubscription';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check, Sparkles, Zap, Crown, Loader2, Shield } from 'lucide-react';
+import { Check, Sparkles, Crown, Loader2, Shield } from 'lucide-react';
 import { toast } from 'sonner';
 import { isAndroidTWA } from '@/lib/platform';
 import AndroidUpgradeNotice from '@/components/ucp/AndroidUpgradeNotice';
@@ -28,13 +28,6 @@ const PRO_PLANS = [
     period: '/year',
     desc: '14-day free trial • Save 25%',
     featured: true,
-  },
-  {
-    id: 'lifetime',
-    label: 'Lifetime',
-    price: '$199.99',
-    period: 'one-time',
-    desc: 'Pay once. Keep Omega Access forever.',
   },
 ];
 
@@ -196,7 +189,7 @@ export default function Pricing() {
             Choose your Omega Access plan
           </h2>
           <p className="text-center text-sm text-muted-foreground mb-6">
-            Subscription or one-time — your call. Secure checkout via Base44 Payments.
+            Cancel anytime. Secure checkout via Base44 Payments.
           </p>
           <div className="grid md:grid-cols-3 gap-4">
             {PRO_PLANS.map((p) => (
@@ -215,7 +208,7 @@ export default function Pricing() {
                 )}
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-1.5 text-base">
-                    {p.id === 'lifetime' ? <Zap className="w-4 h-4 text-brand" /> : <Crown className="w-4 h-4 text-brand" />}
+                    <Crown className="w-4 h-4 text-brand" />
                     {p.label}
                   </CardTitle>
                 </CardHeader>

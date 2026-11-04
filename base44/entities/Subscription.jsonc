@@ -18,8 +18,7 @@
       "type": "string",
       "enum": [
         "monthly",
-        "annual",
-        "lifetime"
+        "annual"
       ],
       "description": "Purchased Omega Access plan"
     },

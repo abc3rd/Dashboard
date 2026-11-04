@@ -55,7 +55,7 @@ export default function Terms() {
           id: 'refunds',
           heading: 'Refund Policy',
           paragraphs: [
-            'Cancelling a subscription stops future renewals but does not refund the current paid period, except where required by applicable law. Lifetime access is a one-time purchase and is non-refundable, except where required by applicable law. Any mandatory consumer rights remain unaffected.',
+            'Cancelling a subscription stops future renewals but does not refund the current paid period, except where required by applicable law. Any mandatory consumer rights remain unaffected.',
             'To request a refund required by law or report a billing error, use the Customer support link beside the checkout button or open the Contact page. Include your order reference, purchase date, amount and the reason for your request. Do not send passwords, authentication tokens or full payment card details. Refunds that are approved are processed through the original payment method where supported.',
           ],
         },
