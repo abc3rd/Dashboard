@@ -70,7 +70,7 @@ export default function Home() {
             <Sparkles className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-4xl font-bold text-foreground mb-3">
-            UCP AI Router
+            Deterministic Dashboard
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Ask any question and watch the Universal Command Protocol (UCP) 

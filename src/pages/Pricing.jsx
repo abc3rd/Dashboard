@@ -40,11 +40,10 @@ const FREE_FEATURES = [
 
 const PRO_FEATURES = [
   'Unlimited queries — no daily cap',
-  'Premium model access (Omega engine)',
-  'Batch & multi-query processing',
-  'Save custom routing presets',
-  'Priority performance monitoring',
-  'Zero-knowledge architecture stays active',
+  'No throughput throttling on routing',
+  'Unlimited query history with tagging & CSV export',
+  'Full performance monitoring & fallback analysis',
+  'Cancel anytime — keep all your data',
 ];
 
 export default function Pricing() {
@@ -112,8 +111,8 @@ export default function Pricing() {
             Omega Access
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Start free with the Sovereign tier — verify the zero-knowledge routing yourself.
-            Upgrade to Omega Access for unlimited power and professional control.
+            Start free with the Sovereign tier. Upgrade to Omega Access for
+            unlimited queries and professional control.
           </p>
           <div className="mt-4 flex items-center justify-center gap-2 text-sm">
             {isPro ? (
@@ -243,7 +242,7 @@ export default function Pricing() {
         {/* Trust line */}
         <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
           <Shield className="w-4 h-4 text-brand" />
-          <span>Zero-knowledge routing stays active on every tier. Cancel anytime.</span>
+          <span>Your data stays private to your account. Cancel anytime.</span>
         </div>
 
         {/* Account deletion — only relevant for signed-in users */}

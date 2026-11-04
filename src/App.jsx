@@ -12,6 +12,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import PageLoadingSpinner from '@/components/PageLoadingSpinner';
 import { ExternalLinkProvider } from '@/components/ucp/ExternalLinkProvider';
+import CookieConsentBanner from '@/components/CookieConsentBanner';
 
 // Route-level code splitting — these pages load their own chunk on first visit.
 const Pricing = lazy(() => import('./pages/Pricing'));
@@ -107,6 +108,7 @@ function App() {
         <Router>
           <ExternalLinkProvider>
             <NavigationTracker />
+            <CookieConsentBanner />
             <AuthenticatedApp />
           </ExternalLinkProvider>
         </Router>

@@ -5,6 +5,7 @@ import { Sparkles, Settings, MessageSquare, Book, Activity, ChevronLeft, Crown }
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
 import AboutUcpDrawer from '@/components/ucp/AboutUcpDrawer';
+import { openCookieSettings } from '@/components/CookieConsentBanner';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const PAGE_TITLES = {
@@ -112,7 +113,7 @@ export default function Layout({ children, currentPageName }) {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
-              <span className="font-semibold text-lg hidden sm:block">UCP Router</span>
+              <span className="font-semibold text-lg hidden sm:block">Deterministic Dashboard</span>
             </Link>
 
             <div className="flex items-center gap-1">
@@ -151,7 +152,7 @@ export default function Layout({ children, currentPageName }) {
               <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center">
                 <Sparkles className="w-3.5 h-3.5 text-white" />
               </div>
-              <span className="font-semibold text-sm text-foreground">UCP Router</span>
+              <span className="font-semibold text-sm text-foreground">Deterministic Dashboard</span>
             </Link>
           ) : (
             <>
@@ -236,9 +237,13 @@ export default function Layout({ children, currentPageName }) {
             <Link to={createPageUrl('WhitePaper')} className="text-muted-foreground hover:text-brand transition-colors">
               White Paper
             </Link>
+            <span className="text-border">•</span>
+            <button onClick={openCookieSettings} className="text-muted-foreground hover:text-brand transition-colors">
+              Cookie Settings
+            </button>
           </div>
           <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <span>Powered by UCP — Omega UI, LLC</span>
+            <span>Powered by Deterministic Dashboard — Omega UI, LLC</span>
           </div>
         </div>
       </footer>

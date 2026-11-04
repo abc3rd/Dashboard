@@ -18,16 +18,16 @@ export default function About() {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-brand to-brand-dark mb-6">
             <Building2 className="w-7 h-7 text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-foreground mb-4">About UCP Router</h1>
+          <h1 className="text-4xl font-bold text-foreground mb-4">About Deterministic Dashboard</h1>
         </div>
 
         {/* Main content - 150+ words */}
         <div className="prose prose-lg max-w-none space-y-6 mb-10">
           <p className="text-lg text-muted-foreground leading-relaxed">
-            <strong className="text-foreground">UCP Router</strong> is an AI routing platform built by
+            <strong className="text-foreground">Deterministic Dashboard</strong> is an AI routing platform built by
             Omega UI, LLC. It uses the <strong className="text-foreground">Universal Command Protocol (UCP)</strong> to
             intelligently route user prompts to the most suitable AI model based on configurable, deterministic
-            selection rules. Rather than relying on a single model for every query, UCP Router evaluates prompt
+            selection rules. Rather than relying on a single model for every query, Deterministic Dashboard evaluates prompt
             characteristics—such as length, keywords, and complexity—to choose between fast, cost-efficient models
             and higher-quality, more capable ones. This approach significantly reduces API costs while maintaining
             response quality.
@@ -43,7 +43,7 @@ export default function About() {
           </p>
 
           <p className="text-lg text-muted-foreground leading-relaxed">
-            UCP Router is developed and maintained by <strong className="text-foreground">Omega UI, LLC</strong>.
+            Deterministic Dashboard is developed and maintained by <strong className="text-foreground">Omega UI, LLC</strong>.
             The project aims to make AI model routing transparent, portable, and deterministic—interpreting each
             prompt once and executing it infinitely across the optimal model.
           </p>

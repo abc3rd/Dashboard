@@ -7,7 +7,7 @@ export default function Terms() {
     <LegalPage
       title="Terms and Conditions"
       effectiveDate="November 4, 2026"
-      intro={`These Terms and Conditions ("Terms") govern your use of the UCP AI Router application (the "Service"), provided by Omega UI, LLC. By creating an account or using the Service, you agree to these Terms. If you do not agree, do not use the Service.`}
+      intro={`These Terms and Conditions ("Terms") govern your use of the Deterministic Dashboard application (the "Service"), provided by Omega UI, LLC. By creating an account or using the Service, you agree to these Terms. If you do not agree, do not use the Service.`}
       contactEmail={CONTACT_EMAIL}
       sections={[
         {
@@ -21,7 +21,7 @@ export default function Terms() {
           id: 'the-service',
           heading: 'The Service',
           paragraphs: [
-            'UCP AI Router routes your prompts to AI models using the Universal Command Protocol (UCP) and deterministic routing rules. The Service includes a free tier and a paid subscription (Omega Access) with higher limits and additional features.',
+            'Deterministic Dashboard routes your prompts to AI models using the Universal Command Protocol (UCP) and deterministic routing rules. The Service includes a free tier and a paid subscription (Omega Access) with higher limits and additional features.',
           ],
         },
         {

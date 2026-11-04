@@ -227,7 +227,7 @@ export default function PerformanceMonitoring() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-foreground">Performance Monitoring</h1>
-              <p className="text-sm text-muted-foreground">Real-time UCP Router analytics</p>
+              <p className="text-sm text-muted-foreground">Real-time routing analytics</p>
             </div>
           </div>
 

@@ -52,8 +52,8 @@ export default function ThankYou() {
                   Omega Access is active!
                 </h1>
                 <p className="text-muted-foreground mb-6">
-                  Your subscription was confirmed. You now have unlimited routing,
-                  premium models, and custom presets.
+                  Your subscription was confirmed. You now have unlimited routing
+                  and full access to premium models.
                 </p>
                 <Link
                   to="/"

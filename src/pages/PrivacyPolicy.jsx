@@ -7,8 +7,8 @@ export default function PrivacyPolicy() {
   return (
     <LegalPage
       title="Privacy Policy"
-      effectiveDate="July 22, 2026"
-      intro={`This Privacy Policy explains how Omega UI, LLC ("we", "us") collects, uses, and protects your information when you use the UCP AI Router application (the "Service"). We are committed to transparency and to giving you control over your data.`}
+      effectiveDate="November 4, 2026"
+      intro={`This Privacy Policy explains how Omega UI, LLC ("we", "us") collects, uses, and protects your information when you use the Deterministic Dashboard application (the "Service"). We are committed to transparency and to giving you control over your data.`}
       contactEmail={CONTACT_EMAIL}
       sections={[
         {
@@ -117,9 +117,9 @@ export default function PrivacyPolicy() {
         },
         {
           id: 'cookies-storage',
-          heading: 'Cookies and Local Storage',
+          heading: 'Cookies and Consent',
           paragraphs: [
-            'We use minimal local storage and authentication tokens to keep you signed in and operate the Service. We do not use advertising cookies or track you across third-party sites.',
+            'We use minimal local storage and authentication tokens to keep you signed in and operate the Service. A cookie consent banner lets you accept or decline optional analytics storage; your choice is reported through Google Consent Mode v2 and stored locally so the banner does not reappear. You can change your choice at any time using the "Cookie Settings" link in the footer. We do not use advertising cookies or track you across third-party sites.',
           ],
         },
         {

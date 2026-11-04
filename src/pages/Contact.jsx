@@ -46,7 +46,7 @@ export default function Contact() {
           </div>
           <h1 className="text-4xl font-bold text-foreground mb-4">Contact Us</h1>
           <p className="text-lg text-muted-foreground max-w-2xl">
-            Have questions about UCP Router, the Universal Command Protocol, or interested in a partnership?
+            Have questions about Deterministic Dashboard, the Universal Command Protocol, or interested in a partnership?
             We'd love to hear from you. Reach out using the form below or email us directly.
           </p>
         </div>
