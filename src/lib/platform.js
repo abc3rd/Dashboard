@@ -29,11 +29,12 @@ export function isAndroidTWA() {
       return true;
     }
 
+    const ua = navigator.userAgent || '';
+    const isAndroid = /Android/i.test(ua);
+
     // 3. Installed Android app shell (Trusted Web Activity / WebAPK): it runs in an
     //    app display mode, so the browser chrome is gone. This catches launches where
     //    the ?platform param and the referrer were lost to a redirect.
-    const ua = navigator.userAgent || '';
-    const isAndroid = /Android/i.test(ua);
     const isAppShell =
       (typeof window.matchMedia === 'function' &&
         (window.matchMedia('(display-mode: standalone)').matches ||
@@ -44,7 +45,18 @@ export function isAndroidTWA() {
       return true;
     }
 
-    // 4. Previously detected on this device.
+    // 4. Android WebView wrapper (e.g. the Base44-generated Play shell). WebView user
+    //    agents carry "; wv" (or legacy "Version/4.0") — markers that never appear in
+    //    a real browser. Play's Broken Functionality policy treats purchase buttons
+    //    that render but can't complete as violations, so wrapper sessions must take
+    //    the no-purchase path exactly like a TWA.
+    const isWebView = /; wv\)/.test(ua) || (/Version\/4\.0/.test(ua) && /Chrome\//.test(ua));
+    if (isAndroid && isWebView) {
+      remember();
+      return true;
+    }
+
+    // 5. Previously detected on this device.
     return localStorage.getItem(STORAGE_KEY) === 'android';
   } catch {
     return false;
