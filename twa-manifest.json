@@ -1,6 +1,6 @@
 {
   "packageId": "com.omegaui.ucprouter",
-  "host": "app.ucprouter.com",
+  "host": "dd.syncloudconnect.store",
   "name": "UCP AI Router",
   "launcherName": "UCP Router",
   "display": "standalone",
@@ -11,16 +11,16 @@
   "backgroundColor": "#ffffff",
   "enableNotifications": false,
   "startUrl": "/?platform=android",
-  "iconUrl": "https://app.ucprouter.com/icon-512.png",
-  "maskableIconUrl": "https://app.ucprouter.com/icon-512.png",
+  "iconUrl": "https://dd.syncloudconnect.store/icon-512.png",
+  "maskableIconUrl": "https://dd.syncloudconnect.store/icon-512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "./android.keystore",
     "alias": "android"
   },
-  "appVersionName": "1.0.0",
-  "appVersionCode": 8,
+  "appVersionName": "1.0.1",
+  "appVersionCode": 9,
   "shortcuts": [],
   "generatorApp": "bubblewrap",
-  "webManifestUrl": "https://app.ucprouter.com/manifest.json"
+  "webManifestUrl": "https://dd.syncloudconnect.store/manifest.json"
 }
